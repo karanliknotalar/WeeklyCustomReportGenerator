@@ -96,7 +96,7 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
         var cancelledItems = items.Where(x => x.IsCancel).ToList();
 
         var sb = new StringBuilder();
-        sb.AppendLine($"ÜRETİMLER ({activeItems.Count})");
+        sb.AppendLine($"ÜRETİMLER ({activeItems.Count}):");
         sb.AppendLine();
 
         // Kategori listesini oluştur
@@ -131,11 +131,12 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
 
         // --- İPTALLER BÖLÜMÜ ---
         sb.AppendLine();
-        sb.AppendLine($"İPTALLER ({cancelledItems.Count:D2})");
-
+        sb.AppendLine($"İPTALLER ({cancelledItems.Count:D2}):");
+        sb.AppendLine();
+        
         if (cancelledItems.Any())
         {
-            sb.AppendLine($"\tİptal ({cancelledItems.Count:D2}): ");
+            sb.AppendLine($"\tİPTAL ({cancelledItems.Count:D2}): ");
 
             // İptalleri tarihe göre sırala ve yazdır
             foreach (var item in cancelledItems.OrderBy(x => x.Date))

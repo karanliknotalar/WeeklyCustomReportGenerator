@@ -35,12 +35,12 @@ namespace WeeklyCustomReportGenerator
         
         private void ColorLines()
         {
-            int start = 0;
+            var start = 0;
 
-            for (int i = 0; i < txtRegexRich.Lines.Length; i++)
+            for (var i = 0; i < txtRegexRich.Lines.Length; i++)
             {
-                string line = txtRegexRich.Lines[i];
-                int length = line.Length;
+                var line = txtRegexRich.Lines[i];
+                var length = line.Length;
 
                 txtRegexRich.Select(start, length);
 

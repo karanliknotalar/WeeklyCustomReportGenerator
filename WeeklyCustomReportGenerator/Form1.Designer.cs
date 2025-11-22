@@ -29,30 +29,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtInput = new System.Windows.Forms.TextBox();
-            this.txtOutput = new System.Windows.Forms.TextBox();
             this.btnProcess = new System.Windows.Forms.Button();
             this.txtProducts = new System.Windows.Forms.TextBox();
             this.txtRegexRich = new System.Windows.Forms.RichTextBox();
+            this.txtInput = new System.Windows.Forms.RichTextBox();
+            this.txtOutput = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
-            // 
-            // txtInput
-            // 
-            this.txtInput.Location = new System.Drawing.Point(12, 12);
-            this.txtInput.Multiline = true;
-            this.txtInput.Name = "txtInput";
-            this.txtInput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtInput.Size = new System.Drawing.Size(288, 538);
-            this.txtInput.TabIndex = 0;
-            // 
-            // txtOutput
-            // 
-            this.txtOutput.Location = new System.Drawing.Point(387, 12);
-            this.txtOutput.Multiline = true;
-            this.txtOutput.Name = "txtOutput";
-            this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtOutput.Size = new System.Drawing.Size(753, 680);
-            this.txtOutput.TabIndex = 1;
             // 
             // btnProcess
             // 
@@ -82,16 +64,34 @@
             this.txtRegexRich.TabIndex = 5;
             this.txtRegexRich.Text = "";
             // 
+            // txtInput
+            // 
+            this.txtInput.Location = new System.Drawing.Point(12, 12);
+            this.txtInput.Name = "txtInput";
+            this.txtInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtInput.Size = new System.Drawing.Size(288, 538);
+            this.txtInput.TabIndex = 6;
+            this.txtInput.Text = "";
+            // 
+            // txtOutput
+            // 
+            this.txtOutput.Location = new System.Drawing.Point(387, 12);
+            this.txtOutput.Name = "txtOutput";
+            this.txtOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtOutput.Size = new System.Drawing.Size(756, 680);
+            this.txtOutput.TabIndex = 7;
+            this.txtOutput.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1155, 704);
+            this.Controls.Add(this.txtOutput);
+            this.Controls.Add(this.txtInput);
             this.Controls.Add(this.txtRegexRich);
             this.Controls.Add(this.txtProducts);
             this.Controls.Add(this.btnProcess);
-            this.Controls.Add(this.txtOutput);
-            this.Controls.Add(this.txtInput);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "Form1";
@@ -101,14 +101,15 @@
             this.PerformLayout();
         }
 
+        private System.Windows.Forms.RichTextBox txtOutput;
+
+        private System.Windows.Forms.RichTextBox txtInput;
+
         private System.Windows.Forms.RichTextBox txtRegexRich;
 
         private System.Windows.Forms.TextBox txtProducts;
-
-        private System.Windows.Forms.TextBox txtOutput;
+        
         private System.Windows.Forms.Button btnProcess;
-
-        private System.Windows.Forms.TextBox txtInput;
 
         #endregion
     }
