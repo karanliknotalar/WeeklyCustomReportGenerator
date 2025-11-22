@@ -82,12 +82,6 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
 
             if (typeLower.Contains(prodLower))
             {
-                if (prod.Equals("Konut", StringComparison.OrdinalIgnoreCase) ||
-                    prod.Equals("İşyeri", StringComparison.OrdinalIgnoreCase))
-                {
-                    return "Konut&İşyeri";
-                }
-
                 return prod.ToUpper(TrCulture);
             }
         }
@@ -107,11 +101,7 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
 
         // Kategori listesini oluştur
         var definedCategories = ProductDefinitions
-            .Select(p =>
-                (p.Equals("Konut", StringComparison.OrdinalIgnoreCase) ||
-                 p.Equals("İşyeri", StringComparison.OrdinalIgnoreCase))
-                    ? "Konut&İşyeri"
-                    : p.ToUpper(TrCulture))
+            .Select(p => p.ToUpper(TrCulture))
             .Distinct()
             .ToList();
 
