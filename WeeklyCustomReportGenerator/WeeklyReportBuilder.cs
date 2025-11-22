@@ -186,7 +186,53 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
 
     public static List<string> GenerateYearlyWeeklyRegexPatterns()
     {
-        const string staticPrefix = @"(?i)^(?!.*\bmakbuz\b)(?!.*\beng\b)(?!.*\bhayat\b)(?!.*\byeşil\b)(?:(?!.*\bzeyil\b)|(?=.*\bİptal\b)).*";
+        const string staticPrefix = @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil\b)|(?=.*\bİptal\b)).*";
+        
+        var today = DateTime.Now.Date;
+        var yearStart = new DateTime(today.Year, 1, 1);
+        
+        var firstSundayOfYear = yearStart;
+        while (firstSundayOfYear.DayOfWeek != DayOfWeek.Sunday)
+        {
+            firstSundayOfYear = firstSundayOfYear.AddDays(1);
+        }
+    
+        var currentSunday = firstSundayOfYear;
+        var weeklyRegexList = new List<string>();
+    
+        while (currentSunday <= today)
+        {
+            var weekStart = currentSunday;
+            
+            var weekEnd = weekStart.AddDays(6);
+            if (weekEnd > today)
+            {
+                weekEnd = today;
+            }
+    
+            var dateList = new List<string>();
+    
+            for (var date = weekStart; date <= weekEnd; date = date.AddDays(1))
+            {
+                dateList.Add(date.ToString("dd\\.MM\\.yyyy"));
+            }
+    
+            if (dateList.Count > 0)
+            {
+                var datePart = "(" + string.Join("|", dateList) + ")";
+    
+                weeklyRegexList.Add(staticPrefix + datePart + ".*");
+            }
+    
+            currentSunday = currentSunday.AddDays(7);
+        }
+    
+        return weeklyRegexList;
+    }
+    
+    public static List<string> GenerateYearlyWeeklyRegexPatternsShort()
+    {
+        const string staticPrefix = @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil\b)|(?=.*\bİptal\b)).*";
         
         var today = DateTime.Now.Date;
         var yearStart = new DateTime(today.Year, 1, 1);
@@ -203,30 +249,73 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
         while (currentSunday <= today)
         {
             var weekStart = currentSunday;
-            
             var weekEnd = weekStart.AddDays(6);
+            
             if (weekEnd > today)
             {
                 weekEnd = today;
             }
 
-            var dateList = new List<string>();
+            var dateRegexPart = GetCompactDateRegex(weekStart, weekEnd);
 
-            for (var date = weekStart; date <= weekEnd; date = date.AddDays(1))
+            if (!string.IsNullOrEmpty(dateRegexPart))
             {
-                dateList.Add(date.ToString("dd\\.MM\\.yyyy"));
-            }
-
-            if (dateList.Count > 0)
-            {
-                var datePart = "(" + string.Join("|", dateList) + ")";
-
-                weeklyRegexList.Add(staticPrefix + datePart + ".*");
+                weeklyRegexList.Add(staticPrefix + dateRegexPart + ".*");
             }
 
             currentSunday = currentSunday.AddDays(7);
         }
 
         return weeklyRegexList;
+    }
+
+    private static string GetCompactDateRegex(DateTime start, DateTime end)
+    {
+        var parts = new List<string>();
+        
+        var current = start;
+        while (current <= end)
+        {
+            var endOfMonth = new DateTime(current.Year, current.Month, DateTime.DaysInMonth(current.Year, current.Month));
+            var segmentEnd = endOfMonth < end ? endOfMonth : end;
+            
+            var dayPart = GenerateDayRangePattern(current.Day, segmentEnd.Day);
+            var monthPart = current.Month.ToString("00");
+            var yearPart = current.Year.ToString();
+
+            parts.Add($"{dayPart}\\.{monthPart}\\.{yearPart}");
+            current = segmentEnd.AddDays(1);
+        }
+
+        if (parts.Count > 1)
+        {
+            return "(" + string.Join("|", parts) + ")";
+        }
+        
+        return parts[0];
+    }
+    
+    private static string GenerateDayRangePattern(int startDay, int endDay)
+    {
+        var ranges = new List<string>();
+        
+        for (var i = startDay; i <= endDay;)
+        {
+            var tens = i / 10; 
+            var units = i % 10; 
+            
+            var endOfCurrentTen = (tens * 10) + 9;
+            
+            var effectiveEnd = Math.Min(endDay, endOfCurrentTen);
+            var effectiveEndUnits = effectiveEnd % 10;
+
+            ranges.Add(units == effectiveEndUnits ? i.ToString("00") : $"{tens}[{units}-{effectiveEndUnits}]");
+
+            i = effectiveEnd + 1;
+        }
+
+
+        var result = string.Join("|", ranges);
+        return ranges.Count > 1 ? $"({result})" : result;
     }
 }
