@@ -33,7 +33,7 @@
             this.txtOutput = new System.Windows.Forms.TextBox();
             this.btnProcess = new System.Windows.Forms.Button();
             this.txtProducts = new System.Windows.Forms.TextBox();
-            this.txtRegex = new System.Windows.Forms.TextBox();
+            this.txtRegexRich = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // txtInput
@@ -69,25 +69,25 @@
             this.txtProducts.Location = new System.Drawing.Point(306, 182);
             this.txtProducts.Multiline = true;
             this.txtProducts.Name = "txtProducts";
-            this.txtProducts.Size = new System.Drawing.Size(75, 510);
+            this.txtProducts.Size = new System.Drawing.Size(75, 368);
             this.txtProducts.TabIndex = 3;
             this.txtProducts.Text = "Trafik\r\nKasko\r\nYeşilsigorta\r\nZ.Koltuk\r\nYol Yardım\r\nIMM\r\nTSS\r\nYSS\r\nDASK\r\nKONUT\r\nİŞ" + "YERİ";
             // 
-            // txtRegex
+            // txtRegexRich
             // 
-            this.txtRegex.Location = new System.Drawing.Point(12, 556);
-            this.txtRegex.Multiline = true;
-            this.txtRegex.Name = "txtRegex";
-            this.txtRegex.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtRegex.Size = new System.Drawing.Size(288, 136);
-            this.txtRegex.TabIndex = 4;
+            this.txtRegexRich.Location = new System.Drawing.Point(12, 556);
+            this.txtRegexRich.Name = "txtRegexRich";
+            this.txtRegexRich.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtRegexRich.Size = new System.Drawing.Size(369, 136);
+            this.txtRegexRich.TabIndex = 5;
+            this.txtRegexRich.Text = "";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1155, 704);
-            this.Controls.Add(this.txtRegex);
+            this.Controls.Add(this.txtRegexRich);
             this.Controls.Add(this.txtProducts);
             this.Controls.Add(this.btnProcess);
             this.Controls.Add(this.txtOutput);
@@ -101,7 +101,7 @@
             this.PerformLayout();
         }
 
-        private System.Windows.Forms.TextBox txtRegex;
+        private System.Windows.Forms.RichTextBox txtRegexRich;
 
         private System.Windows.Forms.TextBox txtProducts;
 

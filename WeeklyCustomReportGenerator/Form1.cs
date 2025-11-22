@@ -1,5 +1,7 @@
 ﻿#nullable enable
 using System;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WeeklyCustomReportGenerator
@@ -25,7 +27,29 @@ namespace WeeklyCustomReportGenerator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            txtRegex.Text = WeeklyReportBuilder.GetDynamicRegex();
+            // txtRegex.Text = WeeklyReportBuilder.GetDynamicRegex();
+            txtRegexRich.Lines = WeeklyReportBuilder.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse().ToArray();;
+            ColorLines();
+
+        }
+        
+        private void ColorLines()
+        {
+            int start = 0;
+
+            for (int i = 0; i < txtRegexRich.Lines.Length; i++)
+            {
+                string line = txtRegexRich.Lines[i];
+                int length = line.Length;
+
+                txtRegexRich.Select(start, length);
+
+                txtRegexRich.SelectionBackColor = (i % 2 == 0)
+                    ? Color.LightYellow
+                    : Color.LightGray;
+
+                start += length + 1;
+            }
         }
     }
 }
