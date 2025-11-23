@@ -8,10 +8,17 @@ using System.Text;
 
 namespace WeeklyCustomReportGenerator;
 
-public class WeeklyReportBuilder(IEnumerable<string> products)
+public class WeeklyReportBuilder()
 {
-    private List<string> ProductDefinitions { get; set; } = products.ToList();
-    private CultureInfo TrCulture { get; set; } = CultureInfo.GetCultureInfo("tr-TR");
+    private List<string>? ProductKeywords { get; set; }
+    private CultureInfo? TrCulture { get; set; }
+    
+
+    public WeeklyReportBuilder(string[] productOrder) : this()
+    {
+        ProductKeywords = productOrder.ToList();
+        TrCulture = CultureInfo.GetCultureInfo("tr-TR");
+    }
 
     public List<PolicyItem> ParseFiles(IEnumerable<string> lines)
     {
@@ -20,105 +27,66 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
         foreach (var path in lines)
         {
             if (string.IsNullOrWhiteSpace(path)) continue;
-
+            
             var fileName = Path.GetFileNameWithoutExtension(path);
-
-            var isCancel = TrCulture.CompareInfo.IndexOf(fileName, "İptal", CompareOptions.IgnoreCase) >= 0;
-
-            var parts = fileName.Split([" - "], StringSplitOptions.RemoveEmptyEntries);
-
-            if (parts.Length < 2) continue;
-
-            if (!DateTime.TryParse(parts[0].Trim(), out var date)) continue;
-
-            var customer = parts[1].Trim();
-            var plate = "";
-            var typeFromFile = "";
-
-            switch (parts.Length)
+            
+            var isCancel = TrCulture!.CompareInfo.IndexOf(fileName, "iptal", CompareOptions.IgnoreCase) >= 0;
+            
+            var date = DateTime.MinValue;
+            var parts = fileName.Split([" - ", " "], StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length > 0)
             {
-                case 3:
-                    // Format: Tarih - İsim - Tür
-                    typeFromFile = parts[2].Trim();
-                    break;
-                case 4:
-                    // Format: Tarih - İsim - Plaka - Tür
-                    plate = parts[2].Trim();
-                    typeFromFile = parts[3].Trim();
-                    break;
-                case > 4:
-                    // Format: Tarih - İsim - Plaka - Tür - Açıklama - Zeyil vs.
-                    plate = parts[2].Trim();
-
-                    // Geri kalan her şeyi birleştirip tür/açıklama yapıyoruz
-                    typeFromFile = string.Join(" - ", parts.Skip(3));
-                    break;
+                DateTime.TryParse(parts[0], out date);
             }
 
-            var category = DetectCategory(typeFromFile);
+            var category = "DİĞER";
+
+            if (!isCancel) 
+            {
+                foreach (var keyword in ProductKeywords!)
+                {
+                    if (TrCulture.CompareInfo.IndexOf(fileName, keyword, CompareOptions.IgnoreCase) < 0) continue;
+                    category = keyword.ToUpper(TrCulture);
+                    break;
+                }
+            }
 
             items.Add(new PolicyItem
             {
                 Date = date,
-                Customer = customer,
-                Plate = plate,
-                TypeFromFile = typeFromFile,
+                FullLine = fileName,
                 Category = category,
-                IsCancel = isCancel,
-                FileNameWithoutExt = fileName
+                IsCancel = isCancel
             });
         }
 
         return items;
     }
 
-    private string DetectCategory(string typeFromFile)
-    {
-        var typeLower = typeFromFile.ToLower(TrCulture);
-
-        foreach (var prod in ProductDefinitions)
-        {
-            var prodLower = prod.ToLower(TrCulture);
-
-            if (typeLower.Contains(prodLower))
-            {
-                return prod.ToUpper(TrCulture);
-            }
-        }
-
-        return "DİĞER";
-    }
-
     public string BuildReport(List<PolicyItem> items)
     {
-        // İptal olanları ve olmayanları ayır
         var activeItems = items.Where(x => !x.IsCancel).ToList();
         var cancelledItems = items.Where(x => x.IsCancel).ToList();
 
         var sb = new StringBuilder();
         sb.AppendLine($"ÜRETİMLER ({activeItems.Count}):");
         sb.AppendLine();
-
-        // Kategori listesini oluştur
-        var definedCategories = ProductDefinitions
-            .Select(p => p.ToUpper(TrCulture))
-            .Distinct()
-            .ToList();
-
+        
         var groupings = activeItems.GroupBy(x => x.Category).ToList();
 
-        // 1. Tanımlı ürünleri sırayla yazdır
-        foreach (var categoryName in definedCategories)
+        foreach (var keyword in ProductKeywords!)
         {
-            var group = groupings.FirstOrDefault(g => g.Key == categoryName);
+            var categoryKey = keyword.ToUpper(TrCulture!);
+
+            var group = groupings.FirstOrDefault(g => g.Key == categoryKey);
+
             if (group != null)
             {
-                PrintGroup(sb, group.Key, group.ToList());
+                PrintGroup(sb, categoryKey, group.ToList());
             }
         }
 
-        // 2. Diğer grubunu yazdır
-        var otherGroup = groupings.FirstOrDefault(g => !definedCategories.Contains(g.Key));
+        var otherGroup = groupings.FirstOrDefault(g => g.Key == "DİĞER");
         if (otherGroup != null)
         {
             PrintGroup(sb, "DİĞER", otherGroup.ToList());
@@ -129,20 +97,16 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
             sb.AppendLine();
         }
 
-        // --- İPTALLER BÖLÜMÜ ---
+        // --- İPTALLER ---
         sb.AppendLine();
         sb.AppendLine($"İPTALLER ({cancelledItems.Count:D2}):");
         sb.AppendLine();
-        
+
         if (cancelledItems.Any())
         {
-            sb.AppendLine($"\tİPTAL ({cancelledItems.Count:D2}): ");
-
-            // İptalleri tarihe göre sırala ve yazdır
-            foreach (var item in cancelledItems.OrderBy(x => x.Date))
+            foreach (var item in cancelledItems.OrderBy(x => x.Date).ThenBy(x => x.FullLine))
             {
-                // İptallerde dosya isminin tamamını (uzantısız) olduğu gibi yazdır
-                sb.AppendLine($"\t\t{item.FileNameWithoutExt}");
+                sb.AppendLine($"\t{item.FullLine}");
             }
         }
 
@@ -151,93 +115,74 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
 
     private static void PrintGroup(StringBuilder sb, string categoryName, List<PolicyItem> list)
     {
-        var sortedList = list.OrderBy(x => x.Date).ThenBy(x => x.Customer).ToList();
+        var sortedList = list.OrderBy(x => x.Date).ThenBy(x => x.FullLine).ToList();
 
         sb.AppendLine($"\t{categoryName} ({sortedList.Count:D2}):");
 
         foreach (var item in sortedList)
         {
-            var platePart = string.IsNullOrWhiteSpace(item.Plate) ? "" : $" - {item.Plate}";
-            sb.AppendLine($"\t\t{item.Date:dd.MM.yyyy} - {item.Customer}{platePart} - {item.TypeFromFile}");
+            sb.AppendLine($"\t\t{item.FullLine}");
         }
 
         sb.AppendLine();
     }
-
-    public static string GetDynamicRegex()
-    {
-        const string staticPart =
-            @"(?i)^(?!.*\bmakbuz\b)(?!.*\beng\b)(?!.*\bhayat\b)(?!.*\byeşil\b)(?:(?!.*\bzeyil\b)|(?=.*\bİptal\b)).*";
-
-        var today = DateTime.Now.Date;
-
-        var lastSunday = today.AddDays(-(int)today.DayOfWeek);
-
-        var dateList = new List<string>();
-
-        for (var date = lastSunday; date <= today; date = date.AddDays(1))
-        {
-            dateList.Add(date.ToString("dd\\.MM\\.yyyy"));
-        }
-
-        var datePart = "(" + string.Join("|", dateList) + ")";
-
-        return staticPart + datePart + ".*";
-    }
+    
 
     public static List<string> GenerateYearlyWeeklyRegexPatterns()
     {
-        const string staticPrefix = @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil\b)|(?=.*\bİptal\b)).*";
-        
+        const string staticPrefix =
+            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
+
         var today = DateTime.Now.Date;
         var yearStart = new DateTime(today.Year, 1, 1);
-        
+
         var firstSundayOfYear = yearStart;
         while (firstSundayOfYear.DayOfWeek != DayOfWeek.Sunday)
         {
             firstSundayOfYear = firstSundayOfYear.AddDays(1);
         }
-    
+
         var currentSunday = firstSundayOfYear;
         var weeklyRegexList = new List<string>();
-    
+
         while (currentSunday <= today)
         {
             var weekStart = currentSunday;
-            
+
             var weekEnd = weekStart.AddDays(6);
             if (weekEnd > today)
             {
                 weekEnd = today;
             }
-    
+
             var dateList = new List<string>();
-    
+
             for (var date = weekStart; date <= weekEnd; date = date.AddDays(1))
             {
                 dateList.Add(date.ToString("dd\\.MM\\.yyyy"));
             }
-    
+
             if (dateList.Count > 0)
             {
                 var datePart = "(" + string.Join("|", dateList) + ")";
-    
+
                 weeklyRegexList.Add(staticPrefix + datePart + ".*");
             }
-    
+
             currentSunday = currentSunday.AddDays(7);
         }
-    
+
         return weeklyRegexList;
     }
-    
+
     public static List<string> GenerateYearlyWeeklyRegexPatternsShort()
     {
-        const string staticPrefix = @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil\b)|(?=.*\bİptal\b)).*";
-        
+        const string staticPrefix =
+            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
+
         var today = DateTime.Now.Date;
         var yearStart = new DateTime(today.Year, 1, 1);
-        
+
         var firstSundayOfYear = yearStart;
         while (firstSundayOfYear.DayOfWeek != DayOfWeek.Sunday)
         {
@@ -251,7 +196,7 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
         {
             var weekStart = currentSunday;
             var weekEnd = weekStart.AddDays(6);
-            
+
             if (weekEnd > today)
             {
                 weekEnd = today;
@@ -273,13 +218,14 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
     private static string GetCompactDateRegex(DateTime start, DateTime end)
     {
         var parts = new List<string>();
-        
+
         var current = start;
         while (current <= end)
         {
-            var endOfMonth = new DateTime(current.Year, current.Month, DateTime.DaysInMonth(current.Year, current.Month));
+            var endOfMonth = new DateTime(current.Year, current.Month,
+                DateTime.DaysInMonth(current.Year, current.Month));
             var segmentEnd = endOfMonth < end ? endOfMonth : end;
-            
+
             var dayPart = GenerateDayRangePattern(current.Day, segmentEnd.Day);
             var monthPart = current.Month.ToString("00");
             var yearPart = current.Year.ToString();
@@ -292,21 +238,21 @@ public class WeeklyReportBuilder(IEnumerable<string> products)
         {
             return "(" + string.Join("|", parts) + ")";
         }
-        
+
         return parts[0];
     }
-    
+
     private static string GenerateDayRangePattern(int startDay, int endDay)
     {
         var ranges = new List<string>();
-        
+
         for (var i = startDay; i <= endDay;)
         {
-            var tens = i / 10; 
-            var units = i % 10; 
-            
+            var tens = i / 10;
+            var units = i % 10;
+
             var endOfCurrentTen = (tens * 10) + 9;
-            
+
             var effectiveEnd = Math.Min(endDay, endOfCurrentTen);
             var effectiveEndUnits = effectiveEnd % 10;
 
