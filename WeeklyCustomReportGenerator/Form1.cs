@@ -28,9 +28,8 @@ namespace WeeklyCustomReportGenerator
         private void Form1_Load(object sender, EventArgs e)
         {
             // txtRegex.Text = WeeklyReportBuilder.GetDynamicRegex();
-            txtRegexRich.Lines = WeeklyReportBuilder.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse().ToArray();;
+            txtRegexRich.Lines = WeeklyReportBuilder.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse().ToArray();
             ColorLines();
-
         }
         
         private void ColorLines()
@@ -50,6 +49,9 @@ namespace WeeklyCustomReportGenerator
 
                 start += length + 1;
             }
+            txtRegexRich.SelectionStart = 0;
+            txtRegexRich.SelectionLength = 0;
+            txtRegexRich.ScrollToCaret();
         }
     }
 }
