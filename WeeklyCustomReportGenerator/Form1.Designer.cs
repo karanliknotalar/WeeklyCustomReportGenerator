@@ -67,7 +67,6 @@
             // txtInput
             // 
             this.txtInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.txtInput.Location = new System.Drawing.Point(8, 8);
             this.txtInput.Name = "txtInput";
             this.tableLayoutPanel1.SetRowSpan(this.txtInput, 2);
@@ -120,6 +119,7 @@
             this.listRegexPattern.Size = new System.Drawing.Size(416, 305);
             this.listRegexPattern.TabIndex = 15;
             this.listRegexPattern.SelectedIndexChanged += new System.EventHandler(this.listRegexPattern_SelectedIndexChanged);
+            this.listRegexPattern.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listRegexPattern_KeyDown);
             // 
             // txtProducts
             // 

@@ -65,5 +65,12 @@ namespace WeeklyCustomReportGenerator
                 MessageBox.Show($@"Kritik Hata: {ex.Message}");
             }
         }
+
+        private void listRegexPattern_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!e.Control || e.KeyCode != Keys.C) return;
+            if (listRegexPattern.SelectedItem == null) return;
+            Clipboard.SetText(listRegexPattern.SelectedItem.ToString());
+        }
     }
 }
