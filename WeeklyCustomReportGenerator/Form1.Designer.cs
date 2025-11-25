@@ -74,6 +74,7 @@
             this.txtInput.Size = new System.Drawing.Size(343, 377);
             this.txtInput.TabIndex = 9;
             this.txtInput.Text = "";
+            this.txtInput.TextChanged += new System.EventHandler(this.txtInput_TextChanged);
             // 
             // txtOutput
             // 
@@ -118,7 +119,6 @@
             this.tableLayoutPanel1.SetRowSpan(this.listRegexPattern, 2);
             this.listRegexPattern.Size = new System.Drawing.Size(416, 305);
             this.listRegexPattern.TabIndex = 15;
-            this.listRegexPattern.Click += new System.EventHandler(this.listRegexPattern_Click);
             this.listRegexPattern.SelectedIndexChanged += new System.EventHandler(this.listRegexPattern_SelectedIndexChanged);
             // 
             // txtProducts

@@ -20,22 +20,21 @@ namespace WeeklyCustomReportGenerator
                 .ToArray<object>());
         }
 
-        private void listRegexPattern_Click(object sender, EventArgs e)
-        {
-            RunProcess();
-        }
-
         private void listRegexPattern_SelectedIndexChanged(object sender, EventArgs e)
         {
+            GetDirList();
+        }
+
+        private void txtInput_TextChanged(object sender, EventArgs e)
+        {
             RunProcess();
         }
 
-        private void RunProcess()
+        private void GetDirList()
         {
             if (listRegexPattern.SelectedItem == null) return;
 
             var selectedPattern = listRegexPattern.SelectedItem.ToString();
-
             var targetDirectory = txtDir.Text;
 
             try
@@ -43,11 +42,19 @@ namespace WeeklyCustomReportGenerator
                 var regex = new Regex(selectedPattern, RegexOptions.Compiled);
 
                 txtInput.Lines = Tools.SearchFiles(targetDirectory, regex).ToArray();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($@"Kritik Hata: {ex.Message}");
+            }
+        }
 
+        private void RunProcess()
+        {
+            try
+            {
                 var files = txtInput.Text.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
-
                 var productOrder = txtProducts.Lines;
-
                 var builder = new WeeklyReportBuilder(productOrder);
                 var items = builder.ParseFiles(files);
 
