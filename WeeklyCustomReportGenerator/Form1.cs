@@ -1,7 +1,10 @@
 ﻿#nullable enable
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace WeeklyCustomReportGenerator
@@ -13,45 +16,50 @@ namespace WeeklyCustomReportGenerator
             InitializeComponent();
         }
 
-        private void btnProcess_Click(object sender, EventArgs e)
-        {
-            var files = txtInput.Text.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
-
-            var productOrder = txtProducts.Lines;
-
-            var builder = new WeeklyReportBuilder(productOrder);
-            var items = builder.ParseFiles(files);
-
-            txtOutput.Text = builder.BuildReport(items);
-        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // txtRegex.Text = WeeklyReportBuilder.GetDynamicRegex();
-            txtRegexRich.Lines = WeeklyReportBuilder.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse().ToArray();
-            ColorLines();
+            listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
+                .ToArray<object>());
         }
-        
-        private void ColorLines()
+
+        private void listRegexPattern_Click(object sender, EventArgs e)
         {
-            var start = 0;
+            RunProcess();
+        }
 
-            for (var i = 0; i < txtRegexRich.Lines.Length; i++)
+        private void listRegexPattern_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RunProcess();
+        }
+
+        private void RunProcess()
+        {
+            if (listRegexPattern.SelectedItem == null) return;
+
+            var selectedPattern = listRegexPattern.SelectedItem.ToString();
+
+            var targetDirectory = txtDir.Text;
+
+            try
             {
-                var line = txtRegexRich.Lines[i];
-                var length = line.Length;
+                var regex = new Regex(selectedPattern, RegexOptions.Compiled);
 
-                txtRegexRich.Select(start, length);
+                txtInput.Lines = Tools.SearchFiles(targetDirectory, regex).ToArray();
 
-                txtRegexRich.SelectionBackColor = (i % 2 == 0)
-                    ? Color.LightYellow
-                    : Color.LightGray;
+                var files = txtInput.Text.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
 
-                start += length + 1;
+                var productOrder = txtProducts.Lines;
+
+                var builder = new WeeklyReportBuilder(productOrder);
+                var items = builder.ParseFiles(files);
+
+                txtOutput.Text = builder.BuildReport(items);
             }
-            txtRegexRich.SelectionStart = 0;
-            txtRegexRich.SelectionLength = 0;
-            txtRegexRich.ScrollToCaret();
+            catch (Exception ex)
+            {
+                MessageBox.Show($@"Kritik Hata: {ex.Message}");
+            }
         }
     }
 }
