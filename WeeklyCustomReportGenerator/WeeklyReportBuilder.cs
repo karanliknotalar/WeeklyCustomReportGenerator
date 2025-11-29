@@ -41,14 +41,11 @@ public class WeeklyReportBuilder()
 
             var category = "DİĞER";
 
-            if (!isCancel)
+            foreach (var keyword in ProductKeywords!)
             {
-                foreach (var keyword in ProductKeywords!)
-                {
-                    if (TrCulture.CompareInfo.IndexOf(fileName, keyword, CompareOptions.IgnoreCase) < 0) continue;
-                    category = keyword.ToUpper(TrCulture);
-                    break;
-                }
+                if (TrCulture.CompareInfo.IndexOf(fileName, keyword, CompareOptions.IgnoreCase) < 0) continue;
+                category = keyword.ToUpper(TrCulture);
+                break;
             }
 
             items.Add(new PolicyItem
@@ -65,36 +62,24 @@ public class WeeklyReportBuilder()
 
     public string BuildReport(List<PolicyItem> items)
     {
+        var sb = new StringBuilder();
+
         var activeItems = items.Where(x => !x.IsCancel).ToList();
         var cancelledItems = items.Where(x => x.IsCancel).ToList();
 
-        var sb = new StringBuilder();
+        var groupActive = activeItems.GroupBy(x => x.Category).ToList();
+        var groupCancelled = cancelledItems.GroupBy(x => x.Category).ToList();
+        var groupOther = groupActive.FirstOrDefault(g => g.Key == "DİĞER");
+
+        // --- ÜRETİMLER ---
         sb.AppendLine($"ÜRETİMLER ({activeItems.Count}):");
         sb.AppendLine();
+        GenerateGroup(groupActive, sb);
 
-        var groupings = activeItems.GroupBy(x => x.Category).ToList();
-
-        foreach (var keyword in ProductKeywords!)
+        // --- DİĞER GRUPLANMAYANLAR --- 
+        if (groupOther != null)
         {
-            var categoryKey = keyword.ToUpper(TrCulture!);
-
-            var group = groupings.FirstOrDefault(g => g.Key == categoryKey);
-
-            if (group != null)
-            {
-                PrintGroup(sb, categoryKey, group.ToList());
-            }
-        }
-
-        var otherGroup = groupings.FirstOrDefault(g => g.Key == "DİĞER");
-        if (otherGroup != null)
-        {
-            PrintGroup(sb, "DİĞER", otherGroup.ToList());
-        }
-        else
-        {
-            sb.AppendLine($"\tDİĞER (00):");
-            sb.AppendLine();
+            PrintGroup(sb, "DİĞER", groupOther.ToList());
         }
 
         // --- İPTALLER ---
@@ -102,15 +87,24 @@ public class WeeklyReportBuilder()
         sb.AppendLine($"İPTALLER ({cancelledItems.Count:D2}):");
         sb.AppendLine();
 
-        if (cancelledItems.Any())
-        {
-            foreach (var item in cancelledItems.OrderBy(x => x.Date).ThenBy(x => x.FullLine))
-            {
-                sb.AppendLine($"\t{item.FullLine}");
-            }
-        }
+        GenerateGroup(groupCancelled, sb);
 
         return sb.ToString();
+    }
+
+    private void GenerateGroup(List<IGrouping<string, PolicyItem>> groups, StringBuilder sb)
+    {
+        foreach (var keyword in ProductKeywords!)
+        {
+            var categoryKey = keyword.ToUpper(TrCulture!);
+
+            var group = groups.FirstOrDefault(g => g.Key == categoryKey);
+
+            if (group != null)
+            {
+                PrintGroup(sb, categoryKey, group.ToList());
+            }
+        }
     }
 
     private static void PrintGroup(StringBuilder sb, string categoryName, List<PolicyItem> list)
