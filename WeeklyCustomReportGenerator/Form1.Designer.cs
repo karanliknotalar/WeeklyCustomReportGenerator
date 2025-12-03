@@ -94,7 +94,7 @@
             this.txtDir.Name = "txtDir";
             this.txtDir.Size = new System.Drawing.Size(589, 20);
             this.txtDir.TabIndex = 13;
-            this.txtDir.Text = "C:\\Users\\ASUS\\Drive’ım";
+            this.txtDir.Text = "C:\\Users\\ASUS\\GDrive";
             // 
             // label1
             // 
