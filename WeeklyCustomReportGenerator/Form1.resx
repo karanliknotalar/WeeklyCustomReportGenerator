@@ -117,4 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="txtGalleryCustomerList.Text" xml:space="preserve">
+    <value>Nuroğlu Oto Galeri
+TrKale Yapı İnşaat
+Mehmet Öksüz
+Ömer Kaan Öksüz
+Mustafa Öksüz
+Metehan Yılmaz
+Mehmet Salih Öksüz
+Sofuoğlu Madencilik
+Harman Oto Kafe
+Neyfer Emre Yılmaz
+Bülbüloğlu İnşaat
+SZK İnşaat Ticaret
+Resul Kalkan
+Ayh Lojistik Otomotiv</value>
+  </data>
 </root>

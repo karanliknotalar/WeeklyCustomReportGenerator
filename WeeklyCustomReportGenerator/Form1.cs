@@ -1,5 +1,7 @@
 ﻿#nullable enable
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -13,11 +15,21 @@ namespace WeeklyCustomReportGenerator
             InitializeComponent();
         }
 
+        public static string DriveDirectory = "";
+        public static List<string> CustomerGalleryList = [];
 
         private void Form1_Load(object sender, EventArgs e)
         {
             listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
                 .ToArray<object>());
+            DriveDirectory = txtDir.Text;
+            CustomerGalleryList = txtGalleryCustomerList.Lines.ToList();
+            var logFilePath = Path.Combine("C:\\", "pdf_processing_log.txt");
+            var logPdfUndefinedFilePath = Path.Combine("C:\\", "pdf_undefined_log.txt");
+            if (File.Exists(logFilePath))
+                File.Delete(logFilePath);
+            if (File.Exists(logPdfUndefinedFilePath))
+                File.Delete(logPdfUndefinedFilePath);
         }
 
         private void listRegexPattern_SelectedIndexChanged(object sender, EventArgs e)
@@ -45,7 +57,7 @@ namespace WeeklyCustomReportGenerator
             }
             catch (Exception ex)
             {
-                MessageBox.Show($@"Kritik Hata: {ex.Message}");
+                Console.WriteLine(ex);
             }
         }
 
@@ -71,6 +83,11 @@ namespace WeeklyCustomReportGenerator
             if (!e.Control || e.KeyCode != Keys.C) return;
             if (listRegexPattern.SelectedItem == null) return;
             Clipboard.SetText(listRegexPattern.SelectedItem.ToString());
+        }
+
+        private void txtDir_TextChanged(object sender, EventArgs e)
+        {
+            DriveDirectory = txtDir.Text;
         }
     }
 }

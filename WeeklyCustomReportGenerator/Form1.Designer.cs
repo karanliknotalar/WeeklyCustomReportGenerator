@@ -29,7 +29,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.txtGalleryCustomerList = new System.Windows.Forms.TextBox();
             this.txtInput = new System.Windows.Forms.RichTextBox();
             this.txtOutput = new System.Windows.Forms.RichTextBox();
             this.txtDir = new System.Windows.Forms.TextBox();
@@ -46,6 +48,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6.375546F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 11.18253F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 51.86229F));
+            this.tableLayoutPanel1.Controls.Add(this.txtGalleryCustomerList, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.txtInput, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtOutput, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.txtDir, 3, 3);
@@ -56,13 +59,32 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(5);
-            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 23.79679F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 76.20321F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 290F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1155, 704);
             this.tableLayoutPanel1.TabIndex = 8;
+            // 
+            // txtGalleryCustomerList
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.txtGalleryCustomerList, 2);
+            this.txtGalleryCustomerList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtGalleryCustomerList.Location = new System.Drawing.Point(8, 601);
+            this.txtGalleryCustomerList.Multiline = true;
+            this.txtGalleryCustomerList.Name = "txtGalleryCustomerList";
+            this.tableLayoutPanel1.SetRowSpan(this.txtGalleryCustomerList, 5);
+            this.txtGalleryCustomerList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtGalleryCustomerList.Size = new System.Drawing.Size(416, 95);
+            this.txtGalleryCustomerList.TabIndex = 16;
+            this.txtGalleryCustomerList.Text = resources.GetString("txtGalleryCustomerList.Text");
             // 
             // txtInput
             // 
@@ -70,7 +92,7 @@
             this.txtInput.Location = new System.Drawing.Point(8, 8);
             this.txtInput.Name = "txtInput";
             this.tableLayoutPanel1.SetRowSpan(this.txtInput, 2);
-            this.txtInput.Size = new System.Drawing.Size(343, 377);
+            this.txtInput.Size = new System.Drawing.Size(343, 277);
             this.txtInput.TabIndex = 9;
             this.txtInput.Text = "";
             this.txtInput.TextChanged += new System.EventHandler(this.txtInput_TextChanged);
@@ -79,29 +101,31 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.txtOutput, 2);
             this.txtOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtOutput.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.txtOutput.Location = new System.Drawing.Point(430, 8);
             this.txtOutput.Name = "txtOutput";
             this.tableLayoutPanel1.SetRowSpan(this.txtOutput, 3);
             this.txtOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtOutput.Size = new System.Drawing.Size(717, 667);
+            this.txtOutput.Size = new System.Drawing.Size(717, 567);
             this.txtOutput.TabIndex = 12;
             this.txtOutput.Text = "";
             // 
             // txtDir
             // 
             this.txtDir.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDir.Location = new System.Drawing.Point(558, 681);
+            this.txtDir.Location = new System.Drawing.Point(558, 581);
             this.txtDir.Name = "txtDir";
             this.txtDir.Size = new System.Drawing.Size(589, 20);
             this.txtDir.TabIndex = 13;
             this.txtDir.Text = "C:\\Users\\ASUS\\GDrive";
+            this.txtDir.TextChanged += new System.EventHandler(this.txtDir_TextChanged);
             // 
             // label1
             // 
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(430, 678);
+            this.label1.Location = new System.Drawing.Point(430, 578);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(122, 21);
+            this.label1.Size = new System.Drawing.Size(122, 20);
             this.label1.TabIndex = 14;
             this.label1.Text = "Dizin Konumu:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -113,10 +137,10 @@
             this.listRegexPattern.FormattingEnabled = true;
             this.listRegexPattern.HorizontalExtent = 800;
             this.listRegexPattern.HorizontalScrollbar = true;
-            this.listRegexPattern.Location = new System.Drawing.Point(8, 391);
+            this.listRegexPattern.Location = new System.Drawing.Point(8, 291);
             this.listRegexPattern.Name = "listRegexPattern";
             this.tableLayoutPanel1.SetRowSpan(this.listRegexPattern, 2);
-            this.listRegexPattern.Size = new System.Drawing.Size(416, 305);
+            this.listRegexPattern.Size = new System.Drawing.Size(416, 304);
             this.listRegexPattern.TabIndex = 15;
             this.listRegexPattern.SelectedIndexChanged += new System.EventHandler(this.listRegexPattern_SelectedIndexChanged);
             this.listRegexPattern.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listRegexPattern_KeyDown);
@@ -128,7 +152,7 @@
             this.txtProducts.Multiline = true;
             this.txtProducts.Name = "txtProducts";
             this.tableLayoutPanel1.SetRowSpan(this.txtProducts, 2);
-            this.txtProducts.Size = new System.Drawing.Size(67, 377);
+            this.txtProducts.Size = new System.Drawing.Size(67, 277);
             this.txtProducts.TabIndex = 10;
             this.txtProducts.Text = "Trafik\r\nKasko\r\nYeşilsigorta\r\nZ.Koltuk\r\nYol Yardım\r\nIMM\r\nTSS\r\nYSS\r\nDASK\r\nKONUT\r\nİŞ" + "YERİ";
             // 
@@ -145,6 +169,8 @@
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.TextBox txtGalleryCustomerList;
 
         private System.Windows.Forms.ListBox listRegexPattern;
 
