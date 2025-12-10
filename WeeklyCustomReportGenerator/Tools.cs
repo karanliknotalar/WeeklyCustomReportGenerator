@@ -325,6 +325,7 @@ public static class Tools
             foreach (var policyItem in policyItems)
             {
                 logContent += $"Kategori: {policyItem.Category}\n";
+                logContent += $"Firma: {policyItem.Company}\n";
                 logContent += $"Dosya Adı: {policyItem.FullLine}\n";
                 logContent += new string('-', 50) + "\n\n";
             }
