@@ -210,6 +210,7 @@ public class TextPdfReader
             {
                 if (Tools.SearchCompanyText(pdfContent, company.CompanySearchText))
                 {
+                    pdfReadResult.FoundCompany = company.CompanyName;
                     Console.WriteLine(@"---------------------------------------------------------");
                     Console.WriteLine($@"İşlenen Dosya: {pdfPath}");
                     Console.WriteLine($@"FİRMA ADI BULUNDU: {company.CompanyName}");
@@ -226,7 +227,7 @@ public class TextPdfReader
                             ? match.Groups[1].Value
                             : match.Groups[2].Value;
                         pdfReadResult.IsSuccess = true;
-                        pdfReadResult.FoundCompany = company.CompanyName;
+                        
                     }
 
                     break;
