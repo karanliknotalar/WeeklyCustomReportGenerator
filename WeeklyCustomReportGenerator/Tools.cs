@@ -373,18 +373,23 @@ public static class Tools
     public static void GenerateCategoryAnalysis(List<PolicyItem> items, StringBuilder sb)
     {
         var analysisData = items
-            // .Where(p => !p.IsCancel) 
             .GroupBy(p => p.Category)
-            .Select(g => new
+            .Select(g => 
             {
-                Category = g.Key,
-                TotalCount = g.Count(),
-                CategoryCount = g.Count(),
-                TotalNew = g.Count(p => p.IsRenewal == false),
-                TotalRenew = g.Count(p => p.IsRenewal),
-                TotalGallery = g.Count(p => p.IsGalleryCustomer),
-                TotalPrice = g.Sum(p => ParseTotalPrice(p.TotalPrice)),
-                AveragePrice = g.Any() ? g.Sum(p => ParseTotalPrice(p.TotalPrice)) / g.Count() : 0m
+                var pricedItems = g.Where(p => ParseTotalPrice(p.TotalPrice) > 0m).ToList();
+                var totalPricedCount = pricedItems.Count;
+                var totalPricedSum = pricedItems.Sum(p => ParseTotalPrice(p.TotalPrice));
+
+                return new
+                {
+                    Category = g.Key,
+                    TotalCount = g.Count(),
+                    TotalNew = g.Count(p => p.IsRenewal == false),
+                    TotalRenew = g.Count(p => p.IsRenewal),
+                    TotalGallery = g.Count(p => p.IsGalleryCustomer),
+                    TotalPrice = g.Sum(p => ParseTotalPrice(p.TotalPrice)),
+                    AveragePrice = totalPricedCount > 0 ? totalPricedSum / totalPricedCount : 0m
+                };
             })
             .OrderByDescending(x => x.TotalPrice)
             .ToList();
