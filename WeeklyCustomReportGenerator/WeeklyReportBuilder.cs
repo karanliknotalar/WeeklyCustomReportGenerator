@@ -130,7 +130,7 @@ public class WeeklyReportBuilder()
         GenerateGroup(groupCancelled, sb);
 
         PrintStatistics(items, sb);
-        Tools.AppendToLogFileForUndefined(items.Where(x => string.IsNullOrEmpty(x.Company)).ToList());
+        Tools.AppendToLogFileForUndefined(items.Where(x => string.IsNullOrEmpty(x.TotalPrice)).ToList());
         return sb.ToString();
     }
 

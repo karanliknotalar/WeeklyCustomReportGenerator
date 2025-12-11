@@ -204,6 +204,7 @@ public class TextPdfReader
         try
         {
             var pdfContent = ReadPdf_IText7_Advanced(pdfPath);
+            
             Tools.AppendToLogFile(pdfContent, pdfPath, new Company());
 
             foreach (var company in _companies)
@@ -211,6 +212,7 @@ public class TextPdfReader
                 if (Tools.SearchCompanyText(pdfContent, company.CompanySearchText))
                 {
                     pdfReadResult.FoundCompany = company.CompanyName;
+                    
                     Console.WriteLine(@"---------------------------------------------------------");
                     Console.WriteLine($@"İşlenen Dosya: {pdfPath}");
                     Console.WriteLine($@"FİRMA ADI BULUNDU: {company.CompanyName}");
