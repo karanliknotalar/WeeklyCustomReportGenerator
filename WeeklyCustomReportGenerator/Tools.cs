@@ -371,8 +371,9 @@ public static class Tools
             : 0m;
     }
 
-    public static void GenerateCategoryAnalysis(List<PolicyItem> items, StringBuilder sb)
+    public static void GenerateCategoryAnalysis(List<PolicyItem> items, StringBuilder sb, bool isCancel = false)
     {
+        var isActiveText = isCancel ? "İPTAL" : "ÜRETİM";
         var analysisData = items
             .GroupBy(p => p.Category)
             .Select(g => 
@@ -395,7 +396,7 @@ public static class Tools
             .OrderByDescending(x => x.TotalPrice)
             .ToList();
 
-        sb.AppendLine("## 📑 POLİÇE TÜRÜ DETAYLI ANALİZ SONUÇLARI");
+        sb.AppendLine($"## 📑 POLİÇE TÜRÜ DETAYLI ANALİZ SONUÇLARI ({isActiveText})");
         sb.AppendLine("=====================================================================================");
 
         const int colWidthCategory = 15;

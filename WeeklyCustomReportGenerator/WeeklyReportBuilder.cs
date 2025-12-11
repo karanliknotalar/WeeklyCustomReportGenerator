@@ -178,6 +178,8 @@ public class WeeklyReportBuilder()
         sb.AppendLine("\r\n\r\n");
         Tools.GenerateCategoryAnalysis(activeItems, sb);
         sb.AppendLine("\r\n\r\n");
+        Tools.GenerateCategoryAnalysis(cancelledItems, sb, true);
+        sb.AppendLine("\r\n\r\n");
         Tools.GenerateCategoryCompanyDetails(activeItems, sb);
     }
 
