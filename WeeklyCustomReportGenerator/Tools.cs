@@ -464,11 +464,9 @@ public static class Tools
             .ToList();
 
         var activeItems = new List<ExelItem>();
-
+ 
         foreach (var item in detailsData)
         {
-            var formattedTotalPrice = item.TotalPrice.ToString("N0", new CultureInfo("tr-TR"));
-
             activeItems.Add(new ExelItem()
             {
                 Category = item.Category.Trim(),
@@ -477,7 +475,7 @@ public static class Tools
                 NewCount = item.IsNew,
                 RenewCount = item.IsRenewed,
                 GalleryCount = item.IsGallery,
-                TotalPrice = Convert.ToDouble(formattedTotalPrice)
+                TotalPrice = item.TotalPrice
             });
         }
 

@@ -1,4 +1,5 @@
-﻿using MiniExcelLibs.Attributes;
+﻿using System;
+using MiniExcelLibs.Attributes;
 
 namespace WeeklyCustomReportGenerator;
 
@@ -23,5 +24,5 @@ public class ExelItem
     public int GalleryCount { get; set; } = 0;
 
     [ExcelColumn(Name = "TOPLAM FİYAT (TL)", Width = 15)]
-    public double TotalPrice { get; set; } = double.MinValue;
+    public decimal TotalPrice { get; set; } = decimal.Zero;
 }

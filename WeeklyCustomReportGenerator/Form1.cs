@@ -1,11 +1,13 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MiniExcelLibs;
+using MiniExcelLibs.Attributes;
 
 namespace WeeklyCustomReportGenerator
 {
@@ -35,6 +37,34 @@ namespace WeeklyCustomReportGenerator
                 File.Delete(logFilePath);
             if (File.Exists(logPdfUndefinedFilePath))
                 File.Delete(logPdfUndefinedFilePath);
+            
+        }
+
+        public void ExceliKaydet()
+        {
+            // Türkiye Para Birimi Formatı
+            var trCulture = new CultureInfo("tr-TR");
+            string currencyFormat = "C"; // C = Currency (Para Birimi) formatı
+        
+            var veriler = new List<object>();
+        
+            // Başlık satırı
+            veriler.Add(new { ToplamTutar = "Toplam Tutar (TL)" }); 
+        
+            // Veri satırları
+            decimal[] tutarlar = { 11031.00m, 145820.00m, -12345.67m, 0m };
+        
+            foreach (var tutar in tutarlar)
+            {
+                veriler.Add(new 
+                { 
+                    ToplamTutar = tutar.ToString(currencyFormat, trCulture) 
+                });
+            }
+        
+            string dosyaYolu = "C:\\ParaBirimiCikti.xlsx";
+        
+            MiniExcel.SaveAs(dosyaYolu, veriler);
         }
 
         private void listRegexPattern_SelectedIndexChanged(object sender, EventArgs e)
@@ -108,7 +138,9 @@ namespace WeeklyCustomReportGenerator
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            // ExceliKaydet();
             if (!_policyItems.Any()) return;
+            
             
             var activeItems = _policyItems.Where(x => !x.IsCancel).ToList();
             var cancelledItems = _policyItems.Where(x => x.IsCancel).ToList();
