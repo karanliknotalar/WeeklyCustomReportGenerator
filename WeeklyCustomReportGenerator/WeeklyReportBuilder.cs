@@ -131,6 +131,8 @@ public class WeeklyReportBuilder()
 
         PrintStatistics(items, sb);
         Tools.AppendToLogFileForUndefined(items.Where(x => string.IsNullOrEmpty(x.TotalPrice)).ToList());
+
+
         return sb.ToString();
     }
 
@@ -149,7 +151,7 @@ public class WeeklyReportBuilder()
         var galleryCancelledCount = cancelledItems.Count(x => x.IsGalleryCustomer);
 
         var renewalCount = activeItems.Count(x => x.IsRenewal);
-        var newCount = approvedCount - renewalCount; 
+        var newCount = approvedCount - renewalCount;
 
         sb.AppendLine("\r\n\r\n");
         sb.AppendLine("╔═══════════════════════════════════════════════════╗");
@@ -180,7 +182,6 @@ public class WeeklyReportBuilder()
         sb.AppendLine("\r\n\r\n");
         Tools.GenerateCategoryAnalysis(cancelledItems, sb, true);
         sb.AppendLine("\r\n\r\n");
-        Tools.GenerateCategoryCompanyDetails(activeItems, sb);
     }
 
     private void GenerateGroup(List<IGrouping<string, PolicyItem>> groups, StringBuilder sb, bool printStatus = false)

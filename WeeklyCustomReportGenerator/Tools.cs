@@ -76,12 +76,15 @@ public static class Tools
         }
 
         var currentSunday = firstSundayOfYear;
-        var weeklyRegexList = new List<string>
+
+        var weeklyRegexList = new List<string>();
+
+        for (var j = 3; j < 7; j++)
         {
-            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\.2023).*\.pdf$",
-            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\.2024).*\.pdf$",
-            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\.2025).*\.pdf$"
-        };
+            weeklyRegexList.Add(
+                @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
+                + $"202{j}).*");
+        }
 
         while (currentSunday <= today)
         {
@@ -128,14 +131,15 @@ public static class Tools
         }
 
         var currentSunday = firstSundayOfYear;
+
         var weeklyRegexList = new List<string>();
 
-        weeklyRegexList.Add(
-            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\.2023).*");
-        weeklyRegexList.Add(
-            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\.2024).*");
-        weeklyRegexList.Add(
-            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\.2025).*");
+        for (var j = 3; j < 7; j++)
+        {
+            weeklyRegexList.Add(
+                @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
+                + $"202{j}).*");
+        }
 
         while (currentSunday <= today)
         {
@@ -314,7 +318,7 @@ public static class Tools
             Console.WriteLine(@$"Log dosyasına yazılırken hata oluştu: {ex.Message}");
         }
     }
-    
+
     public static void AppendToLogFileForUndefined(List<PolicyItem> policyItems)
     {
         var logPdfUndefinedFile = Path.Combine("C:\\", "pdf_undefined_log.txt");
@@ -329,6 +333,7 @@ public static class Tools
                 logContent += $"Dosya Adı: {policyItem.FullLine}\n";
                 logContent += new string('-', 50) + "\n\n";
             }
+
             File.AppendAllText(logPdfUndefinedFile, logContent);
             Console.WriteLine(@$"Tanımsız pdf'ler {logPdfUndefinedFile} konumuna kaydedildi.");
         }
@@ -376,7 +381,7 @@ public static class Tools
         var isActiveText = isCancel ? "İPTAL" : "ÜRETİM";
         var analysisData = items
             .GroupBy(p => p.Category)
-            .Select(g => 
+            .Select(g =>
             {
                 var pricedItems = g.Where(p => ParseTotalPrice(p.TotalPrice) > 0m).ToList();
                 var totalPricedCount = pricedItems.Count;
@@ -436,7 +441,7 @@ public static class Tools
         }
     }
 
-    public static void GenerateCategoryCompanyDetails(List<PolicyItem> items, StringBuilder sb)
+    public static List<ExelItem> GenerateCategoryCompanyDetails(List<PolicyItem> items)
     {
         var detailsData = items
             .GroupBy(p => new { p.Category, p.Company })
@@ -446,21 +451,41 @@ public static class Tools
                 g.Key.Company,
                 CompanyCount = g.Count(),
                 TotalPrice = g.Sum(p => ParseTotalPrice(p.TotalPrice)),
+                IsRenewed = g.Count(p => p.IsRenewal),
+                IsNew = g.Count(p => p.IsRenewal == false),
+                IsGallery = g.Count(p => p.IsGalleryCustomer),
             })
             .OrderBy(x => x.Category)
             .ThenByDescending(x => x.TotalPrice)
             .ToList();
 
-        sb.AppendLine("## 📑 KATEGORİ VE ŞİRKET BAZINDA DETAYLAR");
-        sb.AppendLine("-----------------------------------------");
-        sb.AppendLine("Poliçe\tFirma\tFirma Adet\tToplam (TL)");
+        var activeItems = new List<ExelItem>();
 
         foreach (var item in detailsData)
         {
             var formattedTotalPrice = item.TotalPrice.ToString("N0", new CultureInfo("tr-TR"));
 
-            sb.AppendLine(
-                $"{item.Category.Trim()}\t{item.Company.Trim()}\t{item.CompanyCount,12}\t{formattedTotalPrice,17}");
+            activeItems.Add(new ExelItem()
+            {
+                Category = item.Category.Trim(),
+                Company = item.Company.Trim(),
+                CompanyCount = item.CompanyCount,
+                NewCount = item.IsNew,
+                RenewCount = item.IsRenewed,
+                GalleryCount = item.IsGallery,
+                TotalPrice = Convert.ToDouble(formattedTotalPrice)
+            });
         }
+
+        return activeItems;
+    }
+
+    public static string SelectedDir()
+    {
+        using var dialog = new FolderBrowserDialog();
+        dialog.Description = @"Lütfen raporların kaydedileceği dizini seçin.";
+        dialog.ShowNewFolderButton = true;
+        var result = dialog.ShowDialog();
+        return result == DialogResult.OK ? dialog.SelectedPath : string.Empty;
     }
 }

@@ -73,6 +73,9 @@
         <Reference Include="Microsoft.Extensions.Primitives, Version=10.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
           <HintPath>..\packages\Microsoft.Extensions.Primitives.10.0.0\lib\net462\Microsoft.Extensions.Primitives.dll</HintPath>
         </Reference>
+        <Reference Include="MiniExcel, Version=1.42.0.0, Culture=neutral, PublicKeyToken=e7310002a53eac39, processorArchitecture=MSIL">
+          <HintPath>..\packages\MiniExcel.1.42.0\lib\net45\MiniExcel.dll</HintPath>
+        </Reference>
         <Reference Include="mscorlib" />
         <Reference Include="System" />
         <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -83,6 +86,7 @@
           <HintPath>..\packages\System.Diagnostics.DiagnosticSource.10.0.0\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
         </Reference>
         <Reference Include="System.Drawing" />
+        <Reference Include="System.IO.Compression" />
         <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
           <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
         </Reference>
@@ -100,6 +104,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Company.cs" />
+        <Compile Include="ExelItem.cs" />
         <Compile Include="Form1.cs">
             <SubType>Form</SubType>
         </Compile>

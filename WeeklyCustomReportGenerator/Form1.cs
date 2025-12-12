@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using MiniExcelLibs;
 
 namespace WeeklyCustomReportGenerator
 {
@@ -16,13 +17,17 @@ namespace WeeklyCustomReportGenerator
         }
 
         public static string DriveDirectory = "";
+        private string _saveDirectory = "";
+        private string _year = "";
         public static List<string> CustomerGalleryList = [];
+        private List<PolicyItem> _policyItems = [];
 
         private void Form1_Load(object sender, EventArgs e)
         {
             listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
                 .ToArray<object>());
-            DriveDirectory = txtDir.Text;
+            DriveDirectory = txtDriveDir.Text;
+            _saveDirectory = txtSaveDir.Text;
             CustomerGalleryList = txtGalleryCustomerList.Lines.ToList();
             var logFilePath = Path.Combine("C:\\", "pdf_processing_log.txt");
             var logPdfUndefinedFilePath = Path.Combine("C:\\", "pdf_undefined_log.txt");
@@ -47,7 +52,7 @@ namespace WeeklyCustomReportGenerator
             if (listRegexPattern.SelectedItem == null) return;
 
             var selectedPattern = listRegexPattern.SelectedItem.ToString();
-            var targetDirectory = txtDir.Text;
+            var targetDirectory = txtDriveDir.Text;
 
             try
             {
@@ -68,9 +73,9 @@ namespace WeeklyCustomReportGenerator
                 var files = txtInput.Text.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
                 var productOrder = txtProducts.Lines;
                 var builder = new WeeklyReportBuilder(productOrder);
-                var items = builder.ParseFiles(files);
+                _policyItems = builder.ParseFiles(files);
 
-                txtOutput.Text = builder.BuildReport(items);
+                txtOutput.Text = builder.BuildReport(_policyItems);
             }
             catch (Exception ex)
             {
@@ -80,14 +85,70 @@ namespace WeeklyCustomReportGenerator
 
         private void listRegexPattern_KeyDown(object sender, KeyEventArgs e)
         {
+            var selectedItem = listRegexPattern.SelectedItem.ToString();
+            var match = Regex.Match(selectedItem, @"\.(\d{4})");
+            
+            MessageBox.Show(match.Groups[1].Value);
+
+            if (match.Success)
+            {
+                _year = match.Groups[1].Value;
+            }
+            
             if (!e.Control || e.KeyCode != Keys.C) return;
             if (listRegexPattern.SelectedItem == null) return;
-            Clipboard.SetText(listRegexPattern.SelectedItem.ToString());
+            Clipboard.SetText(selectedItem);
+            
         }
 
         private void txtDir_TextChanged(object sender, EventArgs e)
         {
-            DriveDirectory = txtDir.Text;
+            DriveDirectory = txtDriveDir.Text;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (!_policyItems.Any()) return;
+            
+            var activeItems = _policyItems.Where(x => !x.IsCancel).ToList();
+            var cancelledItems = _policyItems.Where(x => x.IsCancel).ToList();
+
+            var activeItemSheet = Tools.GenerateCategoryCompanyDetails(activeItems);
+            var cancelledItemSheet = Tools.GenerateCategoryCompanyDetails(cancelledItems);
+
+            MiniExcel.SaveAs(Path.Combine(_saveDirectory, $"Brans_Sirket_Uretim_Ozeti_{_year}.xlsx"),
+                new Dictionary<string, object>
+                {
+                    { "ÜRETİMLER", activeItemSheet },
+                    { "İPTALLER", cancelledItemSheet }
+                }, overwriteFile: true);
+            File.WriteAllText(Path.Combine(_saveDirectory, $"{_year} İstatistik.txt"), txtOutput.Text);
+            MessageBox.Show(@"Kaydedildi");
+        }
+
+        private void listRegexPattern_Click(object sender, EventArgs e)
+        {
+            if (listRegexPattern.SelectedItem == null) return;
+            var selectedItem = listRegexPattern.SelectedItem.ToString();
+            var match = Regex.Match(selectedItem, @"\.(\d{4})");
+            if (match.Success)_year = match.Groups[1].Value;
+        }
+
+        private void lblSaveDir_Click(object sender, EventArgs e)
+        {
+            var selectedDir = Tools.SelectedDir();
+            if (string.IsNullOrEmpty(selectedDir)) return;
+            txtSaveDir.Text = selectedDir;
+            _saveDirectory = selectedDir;
+        }
+
+
+        private void lblPdfDir_Click(object sender, EventArgs e)
+        {
+            var selectedDir = Tools.SelectedDir();
+            if (string.IsNullOrEmpty(selectedDir)) return;
+            txtDriveDir.Text = selectedDir;
+            DriveDirectory = selectedDir;
         }
     }
 }
