@@ -67,6 +67,7 @@ public static class Tools
             @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
 
         var today = DateTime.Now.Date;
+        var year = today.Year - 2;
         var yearStart = new DateTime(today.Year, 1, 1);
 
         var firstSundayOfYear = yearStart;
@@ -79,11 +80,12 @@ public static class Tools
 
         var weeklyRegexList = new List<string>();
 
-        for (var j = 3; j < 7; j++)
+        for (var j = 0; j < 3; j++)
         {
             weeklyRegexList.Add(
                 @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
-                + $"202{j}).*");
+                + $"{year}).*");
+            year++;
         }
 
         while (currentSunday <= today)
@@ -122,6 +124,7 @@ public static class Tools
             @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
 
         var today = DateTime.Now.Date;
+        var year = today.Year - 2;
         var yearStart = new DateTime(today.Year, 1, 1);
 
         var firstSundayOfYear = yearStart;
@@ -134,11 +137,12 @@ public static class Tools
 
         var weeklyRegexList = new List<string>();
 
-        for (var j = 3; j < 7; j++)
+        for (var j = 0; j < 3; j++)
         {
             weeklyRegexList.Add(
                 @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
-                + $"202{j}).*");
+                + $"{year}).*");
+            year++;
         }
 
         while (currentSunday <= today)
