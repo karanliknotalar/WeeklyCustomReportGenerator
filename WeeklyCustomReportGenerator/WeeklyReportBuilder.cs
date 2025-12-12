@@ -111,6 +111,9 @@ public class WeeklyReportBuilder()
         var groupCancelled = cancelledItems.GroupBy(x => x.Category).ToList();
         var groupOther = groupActive.FirstOrDefault(g => g.Key == "DİĞER");
 
+        // --- İSTATİSTİK ---
+        PrintStatistics(items, sb);
+        
         // --- ÜRETİMLER ---
         sb.AppendLine($"ÜRETİMLER ({activeItems.Count:D2}):");
         sb.AppendLine();
@@ -126,13 +129,10 @@ public class WeeklyReportBuilder()
         sb.AppendLine();
         sb.AppendLine($"İPTALLER ({cancelledItems.Count:D2}):");
         sb.AppendLine();
-
         GenerateGroup(groupCancelled, sb);
-
-        PrintStatistics(items, sb);
+        
         Tools.AppendToLogFileForUndefined(items.Where(x => string.IsNullOrEmpty(x.TotalPrice)).ToList());
-
-
+        
         return sb.ToString();
     }
 
@@ -153,7 +153,7 @@ public class WeeklyReportBuilder()
         var renewalCount = activeItems.Count(x => x.IsRenewal);
         var newCount = approvedCount - renewalCount;
 
-        sb.AppendLine("\r\n\r\n");
+        sb.AppendLine("\r\n");
         sb.AppendLine("╔═══════════════════════════════════════════════════╗");
         sb.AppendLine("║            POLİÇE GENEL İSTATİSTİKLERİ            ║");
         sb.AppendLine("╠═══════════════════════════════════════════════════╣");
