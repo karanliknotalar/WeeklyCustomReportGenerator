@@ -31,7 +31,7 @@ public class TextPdfReader
         {
             CompanySearchText = "allianzsigorta|Allianz Sigorta A.Ş. işletenin yapmış olduğu",
             CompanyName = "ALLIANZ",
-            TotalPriceRegexPattern = @"(?i)(?:peşinat|PEŞİNAT)\s*[:]?\s*(-?\d[\d.,]*)"
+            TotalPriceRegexPattern = @"(?i)(?:peşinat|PEŞİNAT)\s*[:]?\s*[\d/]+\s*([-\d.,]+)"
         },
         new Company
         {
