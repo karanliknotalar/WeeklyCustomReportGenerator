@@ -151,7 +151,6 @@
             this.listRegexPattern.TabIndex = 15;
             this.listRegexPattern.Click += new System.EventHandler(this.listRegexPattern_Click);
             this.listRegexPattern.SelectedIndexChanged += new System.EventHandler(this.listRegexPattern_SelectedIndexChanged);
-            this.listRegexPattern.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listRegexPattern_KeyDown);
             // 
             // txtProducts
             // 

@@ -83,17 +83,6 @@ namespace WeeklyCustomReportGenerator
             }
         }
 
-        private void listRegexPattern_KeyDown(object sender, KeyEventArgs e)
-        {
-            var selectedItem = listRegexPattern.SelectedItem.ToString();
-            
-            var match = Regex.Match(selectedItem, @"\.(\d{4})");
-            if (match.Success) _year = match.Groups[1].Value;
-            
-            if (listRegexPattern.SelectedItem == null) return;
-            Clipboard.SetText(selectedItem);
-        }
-
         private void txtDir_TextChanged(object sender, EventArgs e)
         {
             DriveDirectory = txtDriveDir.Text;
@@ -124,8 +113,11 @@ namespace WeeklyCustomReportGenerator
         {
             if (listRegexPattern.SelectedItem == null) return;
             var selectedItem = listRegexPattern.SelectedItem.ToString();
+
             var match = Regex.Match(selectedItem, @"\.(\d{4})");
             if (match.Success) _year = match.Groups[1].Value;
+
+            Clipboard.SetText(selectedItem);
         }
 
         private void lblSaveDir_Click(object sender, EventArgs e)
