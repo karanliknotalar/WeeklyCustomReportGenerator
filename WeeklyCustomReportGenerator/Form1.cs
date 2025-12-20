@@ -86,16 +86,10 @@ namespace WeeklyCustomReportGenerator
         private void listRegexPattern_KeyDown(object sender, KeyEventArgs e)
         {
             var selectedItem = listRegexPattern.SelectedItem.ToString();
+            
             var match = Regex.Match(selectedItem, @"\.(\d{4})");
-
-            MessageBox.Show(match.Groups[1].Value);
-
-            if (match.Success)
-            {
-                _year = match.Groups[1].Value;
-            }
-
-            if (!e.Control || e.KeyCode != Keys.C) return;
+            if (match.Success) _year = match.Groups[1].Value;
+            
             if (listRegexPattern.SelectedItem == null) return;
             Clipboard.SetText(selectedItem);
         }
