@@ -105,7 +105,7 @@ public class TextPdfReader
         new Company
         {
             CompanySearchText =
-                "somposigorta.com.tr|SOMPO SİGORTA TRAFİK|Grup Kodu -\nSOMPO SİGORTA A.Ş.|Sigorta Şirketi Ünvanı : SOMPO SİGORTA A.Ş.|SOMPO SİGORTA A.Ş.\nYILDIZ",
+                "somposigorta.com.tr|SOMPO SİGORTA TRAFİK|Grup Kodu -\nSOMPO SİGORTA A.Ş.|Sigorta Şirketi Ünvanı : SOMPO SİGORTA A.Ş.|SOMPO SİGORTA A.Ş.\nYILDIZ|SOMPO SİGORTA A.Ş.\nİSTANBUL GRUP",
             CompanyName = "SOMPO",
             TotalPriceRegexPattern =
                 @"(?i)(?:brüt\s*prim|toplam\s*brüt(?:\s*prim)?|ödenecek\s*prim)\s*[:]?\s*(-?\d[\d.,]*)"
@@ -197,7 +197,7 @@ public class TextPdfReader
         try
         {
             var pdfContent = ReadPdf_IText7_Advanced(pdfPath);
-            
+
             Tools.AppendToLogFile(pdfContent, pdfPath, new Company());
 
             foreach (var company in _companies)
@@ -205,7 +205,7 @@ public class TextPdfReader
                 if (Tools.SearchCompanyText(pdfContent, company.CompanySearchText))
                 {
                     pdfReadResult.FoundCompany = company.CompanyName;
-                    
+
                     Console.WriteLine(@"---------------------------------------------------------");
                     Console.WriteLine($@"İşlenen Dosya: {pdfPath}");
                     Console.WriteLine($@"FİRMA ADI BULUNDU: {company.CompanyName}");
@@ -222,7 +222,6 @@ public class TextPdfReader
                             ? match.Groups[1].Value
                             : match.Groups[2].Value;
                         pdfReadResult.IsSuccess = true;
-                        
                     }
 
                     break;
