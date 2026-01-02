@@ -67,36 +67,28 @@ public static class Tools
             @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
 
         var today = DateTime.Now.Date;
-        var year = today.Year - 2;
-        var yearStart = new DateTime(today.Year, 1, 1);
-
-        var firstSundayOfYear = yearStart;
-        while (firstSundayOfYear.DayOfWeek != DayOfWeek.Sunday)
-        {
-            firstSundayOfYear = firstSundayOfYear.AddDays(1);
-        }
-
-        var currentSunday = firstSundayOfYear;
-
         var weeklyRegexList = new List<string>();
 
+        var year = today.Year - 2;
         for (var j = 0; j < 3; j++)
         {
-            weeklyRegexList.Add(
-                @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
-                + $"{year}).*");
+            weeklyRegexList.Add(staticPrefix + @"(\d{2}\.\d{2}\." + year + @").*\.pdf$");
             year++;
         }
+
+        var yearStart = new DateTime(today.Year, 1, 1);
+        
+        var firstWeekSunday = yearStart.AddDays(-(int)yearStart.DayOfWeek);
+        
+        var currentSunday = firstWeekSunday;
 
         while (currentSunday <= today)
         {
             var weekStart = currentSunday;
-
             var weekEnd = weekStart.AddDays(6);
+
             if (weekEnd > today)
-            {
                 weekEnd = today;
-            }
 
             var dateList = new List<string>();
 
@@ -108,8 +100,7 @@ public static class Tools
             if (dateList.Count > 0)
             {
                 var datePart = "(" + string.Join("|", dateList) + ")";
-
-                weeklyRegexList.Add(staticPrefix + datePart + ".*\\.pdf$");
+                weeklyRegexList.Add(staticPrefix + datePart + @".*\.pdf$");
             }
 
             currentSunday = currentSunday.AddDays(7);
@@ -464,7 +455,7 @@ public static class Tools
             .ToList();
 
         var activeItems = new List<ExelItem>();
- 
+
         foreach (var item in detailsData)
         {
             activeItems.Add(new ExelItem()
