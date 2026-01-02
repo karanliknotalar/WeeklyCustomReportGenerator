@@ -109,7 +109,8 @@ public class WeeklyReportBuilder()
 
         var groupActive = activeItems.GroupBy(x => x.Category).ToList();
         var groupCancelled = cancelledItems.GroupBy(x => x.Category).ToList();
-        var groupOther = groupActive.FirstOrDefault(g => g.Key == "DİĞER");
+        var groupOtherActive = groupActive.FirstOrDefault(g => g.Key == "DİĞER");
+        var groupOtherCancelled = groupCancelled.FirstOrDefault(g => g.Key == "DİĞER");
 
         // --- İSTATİSTİK ---
         PrintStatistics(items, sb);
@@ -119,10 +120,10 @@ public class WeeklyReportBuilder()
         sb.AppendLine();
         GenerateGroup(groupActive, sb, true);
 
-        // --- DİĞER GRUPLANMAYANLAR --- 
-        if (groupOther != null)
+        // --- DİĞER AKTİF GRUPLANMAYANLAR --- 
+        if (groupOtherActive != null)
         {
-            PrintGroup(sb, "DİĞER", groupOther.ToList());
+            PrintGroup(sb, "DİĞER", groupOtherActive.ToList());
         }
 
         // --- İPTALLER ---
@@ -130,6 +131,12 @@ public class WeeklyReportBuilder()
         sb.AppendLine($"İPTALLER ({cancelledItems.Count:D2}):");
         sb.AppendLine();
         GenerateGroup(groupCancelled, sb);
+        
+        // --- DİĞER İPTAL GRUPLANMAYANLAR --- 
+        if (groupOtherCancelled != null)
+        {
+            PrintGroup(sb, "DİĞER", groupOtherCancelled.ToList());
+        }
         
         Tools.AppendToLogFileForUndefined(items.Where(x => string.IsNullOrEmpty(x.TotalPrice)).ToList());
         
