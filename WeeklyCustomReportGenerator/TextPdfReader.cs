@@ -56,7 +56,7 @@ public class TextPdfReader
             CompanySearchText = "0470003295900010|www.hdisigorta.com.tr|SİGORTA ŞİRKETİ ÜNVANI : HDI SİGORTA A.Ş.",
             CompanyName = "HDI",
             TotalPriceRegexPattern =
-                @"(?i)(?:Toplam Prim|Ödenecek Poliçe|TOPLAM\s*:|Ödenecek Tutar|Toplam Ödenecek Prim|Brüt Prim)(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$"
+                @"(?i)(?:Toplam Prim|Ödenecek Poliçe|TOPLAM\s*:|Ödenecek Tutar|Toplam Ödenecek Prim|Brüt Prim|Prim Toplam Prim :\n)(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$"
         },
         new Company
         {
