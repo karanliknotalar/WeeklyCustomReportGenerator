@@ -105,8 +105,8 @@
         <Reference Include="System.Xml.Linq" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Companies.cs" />
         <Compile Include="Company.cs" />
-        <Compile Include="CompanyForPDF\HDI.cs" />
         <Compile Include="CustomerAnalysisExcelWriter.cs" />
         <Compile Include="EuroRateFetcher.cs" />
         <Compile Include="ExelItem.cs" />
