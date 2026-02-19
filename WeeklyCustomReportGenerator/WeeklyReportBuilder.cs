@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace WeeklyCustomReportGenerator;
 
@@ -20,7 +21,7 @@ public class WeeklyReportBuilder()
         TrCulture = CultureInfo.GetCultureInfo("tr-TR");
     }
 
-    public List<PolicyItem> ParseFiles(IEnumerable<string> lines)
+    public async Task<List<PolicyItem>> ParseFiles(IEnumerable<string> lines)
     {
         var items = new List<PolicyItem>();
 
@@ -34,7 +35,7 @@ public class WeeklyReportBuilder()
             {
                 if (string.IsNullOrWhiteSpace(path)) continue;
 
-                var result = pdfReader.ProcessPdf(path);
+                var result = await pdfReader.ProcessPdf(path);
 
                 var fileName = Path.GetFileNameWithoutExtension(path);
 

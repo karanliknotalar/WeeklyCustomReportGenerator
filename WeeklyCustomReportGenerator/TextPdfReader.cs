@@ -1,8 +1,10 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Text;
+using System.Threading.Tasks;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
@@ -190,7 +192,7 @@ public class TextPdfReader
         }
     ];
 
-    public PdfReadResult ProcessPdf(string pdfPath)
+    public async Task<PdfReadResult> ProcessPdf(string pdfPath)
     {
         var pdfReadResult = new PdfReadResult();
 
@@ -212,16 +214,49 @@ public class TextPdfReader
                     Console.WriteLine($@"Aramada Kullanılan Metin: {company.CompanySearchText}");
                     Console.WriteLine(@"---------------------------------------------------------");
                     Console.WriteLine("");
-
-                    // Tools.AppendToLogFile(pdfContent, pdfPath, company);
+                    
 
                     var match = Regex.Match(pdfContent, company.TotalPriceRegexPattern, RegexOptions.IgnoreCase);
                     if (match.Success)
                     {
-                        pdfReadResult.FoundTotalPrice = !string.IsNullOrEmpty(match.Groups[1].Value)
+                        var foundPrice = !string.IsNullOrEmpty(match.Groups[1].Value)
                             ? match.Groups[1].Value
                             : match.Groups[2].Value;
+
+                        if (company.CompanyName == "HEPIYI" && pdfPath.Contains("YSS"))
+                        {
+                            var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPath);
+                            var tlPrice = Tools.ParseTotalPrice(foundPrice);
+                            pdfReadResult.FoundTotalPrice = (tlPrice * euroRate).ToString("N2", new CultureInfo("tr-TR"));
+                            pdfReadResult.IsSuccess = true;
+                            break;
+                        }
+                        
+                        pdfReadResult.FoundTotalPrice = foundPrice;
                         pdfReadResult.IsSuccess = true;
+                    }
+                    else
+                    {
+                        
+                        if (company.CompanyName == "HDI" && (pdfPath.Contains("Yeşilsigorta") | pdfPath.Contains("YSS")))
+                        {
+                            
+                            var matchHdi = Regex.Match(pdfContent, @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR", RegexOptions.IgnoreCase);
+                            if (matchHdi.Success)
+                            {
+                                var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPath);
+
+                                var foundPrice = Tools.ParseTotalPrice(
+                                    !string.IsNullOrEmpty(matchHdi.Groups[1].Value)
+                                        ? matchHdi.Groups[1].Value
+                                        : matchHdi.Groups[2].Value);
+                                
+                                var tlAmount  = foundPrice * euroRate;
+                                
+                                pdfReadResult.FoundTotalPrice = tlAmount.ToString("N2", new CultureInfo("tr-TR"));
+                                pdfReadResult.IsSuccess = true;
+                            }
+                        }
                     }
 
                     break;

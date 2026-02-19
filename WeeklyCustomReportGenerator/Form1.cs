@@ -66,14 +66,14 @@ namespace WeeklyCustomReportGenerator
             }
         }
 
-        private void RunProcess()
+        private async void RunProcess()
         {
             try
             {
                 var files = txtInput.Text.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
                 var productOrder = txtProducts.Lines;
                 var builder = new WeeklyReportBuilder(productOrder);
-                _policyItems = builder.ParseFiles(files);
+                _policyItems = await builder.ParseFiles(files);
 
                 txtOutput.Text = builder.BuildReport(_policyItems);
             }
@@ -99,14 +99,22 @@ namespace WeeklyCustomReportGenerator
             var activeItemSheet = Tools.GenerateCategoryCompanyDetails(activeItems);
             var cancelledItemSheet = Tools.GenerateCategoryCompanyDetails(cancelledItems);
 
-            MiniExcel.SaveAs(Path.Combine(_saveDirectory, $"Brans_Sirket_Uretim_Ozeti_{_year}.xlsx"),
+            MiniExcel.SaveAs(Path.Combine(_saveDirectory, $"Branş_Şirket_Üretim_Özeti_{_year}.xlsx"),
                 new Dictionary<string, object>
                 {
                     { "ÜRETİMLER", activeItemSheet },
                     { "İPTALLER", cancelledItemSheet }
                 }, overwriteFile: true);
             File.WriteAllText(Path.Combine(_saveDirectory, $"{_year} İstatistik.txt"), txtOutput.Text);
+            
+            CustomerAnalysisExcelWriter.WriteCustomerAnalysisSheet(
+                filePath: Path.Combine(_saveDirectory, $"Müşteri_Branş_Üretim_Özeti_{_year}.xlsx"),
+                sheetName: "Müşteri Analizi",
+                items: activeItems
+            );
+            
             MessageBox.Show(@"Kaydedildi");
+            
         }
 
         private void listRegexPattern_Click(object sender, EventArgs e)
@@ -117,7 +125,18 @@ namespace WeeklyCustomReportGenerator
             var match = Regex.Match(selectedItem, @"\.(\d{4})");
             if (match.Success) _year = match.Groups[1].Value;
 
-            Clipboard.SetText(selectedItem);
+            for (var i = 0; i < 5; i++)
+            {
+                try
+                {
+                    Clipboard.SetText(selectedItem);
+                    break;
+                }
+                catch (Exception)
+                {
+                    System.Threading.Thread.Sleep(100);
+                }
+            }
         }
 
         private void lblSaveDir_Click(object sender, EventArgs e)

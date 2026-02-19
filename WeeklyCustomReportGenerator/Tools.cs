@@ -344,7 +344,7 @@ public static class Tools
         return searchParts.Any(part => pdfContent.IndexOf(part.Trim(), StringComparison.OrdinalIgnoreCase) >= 0);
     }
 
-    private static decimal ParseTotalPrice(string totalPrice)
+    public static decimal ParseTotalPrice(string totalPrice)
     {
         var cleanPrice = totalPrice.Replace(" TL", "").Replace(" ", "").Replace("-", "").Trim();
 
