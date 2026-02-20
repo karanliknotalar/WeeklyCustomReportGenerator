@@ -14,6 +14,7 @@ public class Company
     public EuroConversionMode EuroConversion { get; set; } = EuroConversionMode.None;
 
     public List<string> EuroConversionPathKeywords { get; set; } = [];
+    public List<string> DefinitelyEuroConversionPathKeywords { get; set; } = [];
 }
 
 public enum EuroConversionMode

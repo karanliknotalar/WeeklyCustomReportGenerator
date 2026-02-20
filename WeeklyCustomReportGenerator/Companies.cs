@@ -52,7 +52,9 @@ public partial class TextPdfReader
                 @"(?i)(?:Toplam Prim|Ödenecek Poliçe|TOPLAM\s*:|Ödenecek Tutar|Toplam Ödenecek Prim|Brüt Prim|Prim Toplam Prim :\n)(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$",
             EurPriceRegexPattern = @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR",
             EuroConversion = EuroConversionMode.FallbackToEurWhenPathContains,
-            EuroConversionPathKeywords = ["Yeşilsigorta", "YSS"]
+            EuroConversionPathKeywords = ["Yeşilsigorta", "YSS"],
+            DefinitelyEuroConversionPathKeywords = ["FFL","CMR"]
+            
         },
         new Company
         {

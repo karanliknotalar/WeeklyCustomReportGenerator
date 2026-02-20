@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -24,7 +23,7 @@ public partial class TextPdfReader
 
             Tools.AppendToLogFile(pdfContent, pdfPath, new Company());
 
-            
+
             foreach (var company in _companies)
             {
                 if (!Tools.SearchCompanyText(pdfContent, company.CompanySearchText))
@@ -56,7 +55,7 @@ public partial class TextPdfReader
                         ? match.Groups[1].Value
                         : match.Groups[2].Value;
 
-                    if (needsEuroConversion)
+                    if (needsEuroConversion || company.DefinitelyEuroConversionPathKeywords.Any(pdfPath.Contains))
                     {
                         var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPath);
                         var tlAmount = Tools.ParseTotalPrice(foundPrice) * euroRate;
