@@ -30,7 +30,7 @@ public partial class TextPdfReader
         {
             CompanySearchText = "axasigorta",
             CompanyName = "AXA",
-            TotalPriceRegexPattern = @"(?i)(?:Ödenecek\s+Prim)\s*[:]?\s*(-?\d[\d.,]*)"
+            TotalPriceRegexPattern = @"(?i)(?:Ödenecek\s+Prim)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$"
         },
         new Company
         {
