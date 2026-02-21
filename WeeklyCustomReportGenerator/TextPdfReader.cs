@@ -24,11 +24,8 @@ public partial class TextPdfReader
             Tools.AppendToLogFile(pdfContent, pdfPath, new Company());
 
 
-            foreach (var company in _companies)
+            foreach (var company in _companies.Where(company => Tools.SearchCompanyText(pdfContent, company.CompanySearchText)))
             {
-                if (!Tools.SearchCompanyText(pdfContent, company.CompanySearchText))
-                    continue;
-
                 pdfReadResult.FoundCompany = company.CompanyName;
 
                 Console.WriteLine(@"---------------------------------------------------------");
@@ -41,28 +38,33 @@ public partial class TextPdfReader
                 var needsEuroConversion = company.EuroConversion == EuroConversionMode.WhenPathContains &&
                                           company.EuroConversionPathKeywords.Any(pdfPath.Contains);
                 var definitelyNeedsEuroConversion = company.DefinitelyEuroConversionPathKeywords.Any(pdfPath.Contains);
+                //definitelyNeedsEuroConversion tl pattern ile bulduğu euro olan primi, tl olarak yazmak yerine zorunlu olarak euro ya çevirir.
 
                 var patternToUse = needsEuroConversion && company.EurTotalPriceRegexPattern != null
                     ? company.EurTotalPriceRegexPattern
                     : company.TlTotalPriceRegexPattern;
 
-                // if (company.EuroConversion == EuroConversionMode.None)
-                // {
-                //     
-                // }
-
                 var match = Regex.Match(pdfContent, patternToUse, RegexOptions.IgnoreCase);
-
+                var matches = Regex.Matches(pdfContent, patternToUse, RegexOptions.IgnoreCase);
                 if (match.Success)
                 {
-                    var foundPrice = !string.IsNullOrEmpty(match.Groups[1].Value)
-                        ? match.Groups[1].Value
-                        : match.Groups[2].Value;
+                    // var foundPrice = !string.IsNullOrEmpty(match.Groups[1].Value)
+                    //     ? match.Groups[1].Value
+                    //     : match.Groups[2].Value;
+                    
+                    var bestMatch = matches.Cast<Match>()
+                        .OrderByDescending(m => m.Value.Contains("(TL)"))
+                        .ThenBy(m => m.Index)
+                        .FirstOrDefault();
+                    
+                    var foundPrice = !string.IsNullOrEmpty(bestMatch?.Groups[1].Value)
+                        ? bestMatch?.Groups[1].Value
+                        : bestMatch?.Groups[2].Value;
 
                     if (needsEuroConversion || definitelyNeedsEuroConversion)
                     {
                         var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPath);
-                        var tlAmount = Tools.ParseTotalPrice(foundPrice) * euroRate;
+                        var tlAmount = Tools.ParseTotalPrice(foundPrice!) * euroRate;
                         pdfReadResult.FoundTotalPrice = tlAmount.ToString("N2", new CultureInfo("tr-TR"));
                     }
                     else

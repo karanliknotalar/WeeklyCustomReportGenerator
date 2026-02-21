@@ -57,8 +57,12 @@ namespace WeeklyCustomReportGenerator
             try
             {
                 var regex = new Regex(selectedPattern, RegexOptions.Compiled);
+                
+                string[] excludeKeywords = ["A Belgeler", "DIŞ_KAYNAK_HESAPLAR_LİSTESİ", "LİSTELER", "PORTFÖY"];
 
-                txtInput.Lines = Tools.SearchFiles(targetDirectory, regex).ToArray();
+                txtInput.Lines = Tools.SearchFiles(targetDirectory, regex)
+                    .Where(path => !excludeKeywords.Any(k => path.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0))
+                    .ToArray();
             }
             catch (Exception ex)
             {

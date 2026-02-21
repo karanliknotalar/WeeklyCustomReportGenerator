@@ -49,11 +49,11 @@ public partial class TextPdfReader
             CompanySearchText = "0470003295900010|www.hdisigorta.com.tr|SİGORTA ŞİRKETİ ÜNVANI : HDI SİGORTA A.Ş.",
             CompanyName = "HDI",
             TlTotalPriceRegexPattern =
-                @"(?i)(?:Toplam Prim|Ödenecek Poliçe|TOPLAM\s*:|Ödenecek Tutar|Toplam Ödenecek Prim|Brüt Prim|Prim Toplam Prim :\n)(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$",
+                @"(?i)(?:Brüt Prim \(TL\)|Brüt Prim|Toplam Prim|Ödenecek Poliçe|TOPLAM\s*:|Ödenecek Tutar|Toplam Ödenecek Prim|Prim Toplam Prim :\n|Brüt\s+Prim\s*\(TL\))(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$",
             EurTotalPriceRegexPattern = @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR",
             EuroConversion = EuroConversionMode.FallbackToEurWhenPathContains,
             EuroConversionPathKeywords = ["Yeşilsigorta", "YSS"],
-            DefinitelyEuroConversionPathKeywords = ["FFL","CMR"]
+            // DefinitelyEuroConversionPathKeywords = ["FFL"]
             
         },
         new Company
