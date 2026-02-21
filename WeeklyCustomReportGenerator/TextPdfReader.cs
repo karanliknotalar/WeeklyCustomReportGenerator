@@ -38,14 +38,18 @@ public partial class TextPdfReader
                 Console.WriteLine(@"---------------------------------------------------------");
                 Console.WriteLine("");
 
-                var needsEuroConversion =
-                    company.EuroConversion == EuroConversionMode.Always ||
-                    (company.EuroConversion == EuroConversionMode.WhenPathContains &&
-                     company.EuroConversionPathKeywords.Any(pdfPath.Contains));
+                var needsEuroConversion = company.EuroConversion == EuroConversionMode.WhenPathContains &&
+                                          company.EuroConversionPathKeywords.Any(pdfPath.Contains);
+                var definitelyNeedsEuroConversion = company.DefinitelyEuroConversionPathKeywords.Any(pdfPath.Contains);
 
-                var patternToUse = needsEuroConversion && company.EurPriceRegexPattern != null
-                    ? company.EurPriceRegexPattern
-                    : company.TotalPriceRegexPattern;
+                var patternToUse = needsEuroConversion && company.EurTotalPriceRegexPattern != null
+                    ? company.EurTotalPriceRegexPattern
+                    : company.TlTotalPriceRegexPattern;
+
+                // if (company.EuroConversion == EuroConversionMode.None)
+                // {
+                //     
+                // }
 
                 var match = Regex.Match(pdfContent, patternToUse, RegexOptions.IgnoreCase);
 
@@ -55,7 +59,7 @@ public partial class TextPdfReader
                         ? match.Groups[1].Value
                         : match.Groups[2].Value;
 
-                    if (needsEuroConversion || company.DefinitelyEuroConversionPathKeywords.Any(pdfPath.Contains))
+                    if (needsEuroConversion || definitelyNeedsEuroConversion)
                     {
                         var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPath);
                         var tlAmount = Tools.ParseTotalPrice(foundPrice) * euroRate;
@@ -69,10 +73,10 @@ public partial class TextPdfReader
                     pdfReadResult.IsSuccess = true;
                 }
                 else if (company.EuroConversion == EuroConversionMode.FallbackToEurWhenPathContains
-                         && company.EurPriceRegexPattern != null
+                         && company.EurTotalPriceRegexPattern != null
                          && company.EuroConversionPathKeywords.Any(pdfPath.Contains))
                 {
-                    var matchEur = Regex.Match(pdfContent, company.EurPriceRegexPattern, RegexOptions.IgnoreCase);
+                    var matchEur = Regex.Match(pdfContent, company.EurTotalPriceRegexPattern, RegexOptions.IgnoreCase);
                     if (matchEur.Success)
                     {
                         var foundPrice = !string.IsNullOrEmpty(matchEur.Groups[1].Value)

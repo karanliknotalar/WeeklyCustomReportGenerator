@@ -77,9 +77,9 @@ public static class Tools
         }
 
         var yearStart = new DateTime(today.Year, 1, 1);
-        
+
         var firstWeekSunday = yearStart.AddDays(-(int)yearStart.DayOfWeek);
-        
+
         var currentSunday = firstWeekSunday;
 
         while (currentSunday <= today)
@@ -295,12 +295,16 @@ public static class Tools
         try
         {
             var logFilePath = Path.Combine("C:\\", "pdf_processing_log.txt");
+            var patternToUse = company.EuroConversion == EuroConversionMode.WhenPathContains &&
+                               company.EuroConversionPathKeywords.Any(pdfPath.Contains) && company.EurTotalPriceRegexPattern != null
+                ? company.EurTotalPriceRegexPattern
+                : company.TlTotalPriceRegexPattern;
 
             var logContent = $"İşlem Zamanı: {DateTime.Now:dd.MM.yyyy HH:mm:ss}\n";
             logContent += $"PDF Dosya Yolu: {pdfPath}\n";
             logContent += $"Bulunan Firma:\n{company.CompanyName}\n";
             logContent += $"Kullanıclan Arama Metni:\n{company.CompanySearchText}\n";
-            logContent += $"Kullanıclan pattern:\n{company.TotalPriceRegexPattern}\n";
+            logContent += $"Kullanıclan pattern:\n{patternToUse}\n";
             logContent += $"PDF İçeriği:\n{pdfContent}\n";
             logContent += new string('-', 50) + "\n\n";
 

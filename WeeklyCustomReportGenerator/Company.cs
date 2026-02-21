@@ -7,10 +7,10 @@ public class Company
 {
     public string CompanySearchText { get; set; } = "";
     public string CompanyName { get; set; } = "";
-    public string TotalPriceRegexPattern { get; set; } = "";
+    public string TlTotalPriceRegexPattern { get; set; } = "";
 
-    public string? EurPriceRegexPattern { get; set; }
-    
+    public string? EurTotalPriceRegexPattern { get; set; }
+
     public EuroConversionMode EuroConversion { get; set; } = EuroConversionMode.None;
 
     public List<string> EuroConversionPathKeywords { get; set; } = [];
@@ -20,7 +20,6 @@ public class Company
 public enum EuroConversionMode
 {
     None,
-    Always,
     WhenPathContains,
-    FallbackToEurWhenPathContains  // TL pattern tutmazsa EUR'a dene
+    FallbackToEurWhenPathContains // TL pattern tutmazsa EUR'a dene
 }
