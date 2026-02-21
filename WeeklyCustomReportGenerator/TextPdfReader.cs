@@ -54,6 +54,7 @@ public partial class TextPdfReader
                     
                     var bestMatch = matches.Cast<Match>()
                         .OrderByDescending(m => m.Value.Contains("(TL)"))
+                        .ThenByDescending(m => m.Value.Contains("Döviz Karşõlõğõ"))
                         .ThenBy(m => m.Index)
                         .FirstOrDefault();
                     
@@ -63,9 +64,7 @@ public partial class TextPdfReader
 
                     if (needsEuroConversion || definitelyNeedsEuroConversion)
                     {
-                        var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPath);
-                        var tlAmount = Tools.ParseTotalPrice(foundPrice!) * euroRate;
-                        pdfReadResult.FoundTotalPrice = tlAmount.ToString("N2", new CultureInfo("tr-TR"));
+                        pdfReadResult.FoundTotalPrice = await EuroToTlConversion(pdfPathForDate:pdfPath, foundPrice!);
                     }
                     else
                     {
@@ -85,9 +84,7 @@ public partial class TextPdfReader
                             ? matchEur.Groups[1].Value
                             : matchEur.Groups[2].Value;
 
-                        var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPath);
-                        var tlAmount = Tools.ParseTotalPrice(foundPrice) * euroRate;
-                        pdfReadResult.FoundTotalPrice = tlAmount.ToString("N2", new CultureInfo("tr-TR"));
+                        pdfReadResult.FoundTotalPrice = await EuroToTlConversion(pdfPathForDate:pdfPath, foundPrice!);
                         pdfReadResult.IsSuccess = true;
                     }
                 }
@@ -149,5 +146,12 @@ public partial class TextPdfReader
             Console.WriteLine(msg.ToString());
             return msg.ToString();
         }
+    }
+
+    private static async Task<string> EuroToTlConversion(string pdfPathForDate, string foundPrice)
+    {
+        var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPathForDate);
+        var tlAmount = Tools.ParseTotalPrice(foundPrice!) * euroRate;
+        return tlAmount.ToString("N2", new CultureInfo("tr-TR"));
     }
 }

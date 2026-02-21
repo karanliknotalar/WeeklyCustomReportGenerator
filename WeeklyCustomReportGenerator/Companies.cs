@@ -11,7 +11,7 @@ public partial class TextPdfReader
             CompanySearchText = "anadolusigorta.com|ANADOLU ANONİM TÜRK SİGORTA ŞİRKETİ\nSayfa",
             CompanyName = "ANADOLU",
             TlTotalPriceRegexPattern =
-                @"(?i)(?:İptal Edilen Prim Tutarõ|İade Edilecek Tutar|Ödenecek Döviz Karşõlõğõ \(TL\)|Ödenecek Tutar|Brüt Prim)(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)"
+                @"(?i)(?:İade Edilecek Döviz Karşõlõğõ|İptal Edilen Prim Tutarõ|İade Edilecek Tutar|Ödenecek Döviz Karşõlõğõ \(TL\)|Ödenecek Tutar|Brüt Prim)(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)"
         },
         new Company
         {
