@@ -187,6 +187,24 @@ public partial class TextPdfReader
             CompanySearchText = "0144003789300010",
             CompanyName = "GROUPAMA",
             TlTotalPriceRegexPattern = @"(?i)(?:BRÜT\sPRİM)\s*[:]?\s*(-?\d[\d.,]*)"
+        },
+        new Company
+        {
+            CompanySearchText = "Point Asistans|5560532445|POİNT ASİSTANS",
+            CompanyName = "POINT",
+            TlTotalPriceRegexPattern = @"(?i)(?:YOL YARDIM [PAKET[İI]|YOL YARDIM).*?(\d{1,3}(?:,\d{3})*\.\d{2})(?!.*\d)"
+        },
+        new Company
+        {
+            CompanySearchText = "ANADOLU ASSİST|0069142738800001",
+            CompanyName = "ANADOLU",
+            TlTotalPriceRegexPattern = @"(?m)(-?\d[\d.,]*)\s*\r?\n\s*YOL YARDIM"
+        },
+        new Company
+        {
+            CompanySearchText = "TEZ ASİSTANS|tezyolyardım",
+            CompanyName = "TEZ",
+            TlTotalPriceRegexPattern = @"(?i)(?:Toplam Tutar)\s*[:]?\s*(-?\d[\d.,]*)"
         }
     ];
 }
