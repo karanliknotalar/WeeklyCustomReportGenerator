@@ -35,7 +35,7 @@ public static class EuroRateFetcher
     
     private static async Task<decimal> GetTcmbEuroSellRateAsync(DateTime date)
     {
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < 10; i++)
         {
             var checkDate = date.AddDays(-i);
 
@@ -60,7 +60,7 @@ public static class EuroRateFetcher
             }
             catch (HttpRequestException)
             {
-                continue;
+               // continue;
             }
         }
 
