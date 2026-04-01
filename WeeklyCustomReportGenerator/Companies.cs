@@ -190,6 +190,12 @@ public partial class TextPdfReader
         },
         new Company
         {
+            CompanySearchText = "Sigorta Şirketi Ünvanı ANA SİGORTA A.Ş.",
+            CompanyName = "ANA",
+            TlTotalPriceRegexPattern = @"(?i)(?:Ödenecek Tutar)\s*[:]?\s*(-?\d[\d.,]*)"
+        },
+        new Company
+        {
             CompanySearchText = "Point Asistans|5560532445|POİNT ASİSTANS",
             CompanyName = "POINT",
             TlTotalPriceRegexPattern = @"(?i)(?:YOL YARDIM PAKET[İI]|YOL YARDIM|ECO POİNT).*?(\d{1,3}(?:,\d{3})*\.\d{2})(?!.*\d)"
