@@ -12,7 +12,7 @@ public class PolicyItem
     public string TotalPrice { get; set; } = "";
     public string CustomerName { get; set; } = "";
     public string Plate { get; set; } = "";
-    public bool IsRenewal { get; set; } = false;
-    public bool IsGalleryCustomer { get; set; } = false;
+    public bool IsRenewal { get; set; }
+    public bool IsGalleryCustomer { get; set; }
     public bool IsCancel { get; set; }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using MiniExcelLibs.Attributes;
+﻿using MiniExcelLibs.Attributes;
 
 namespace WeeklyCustomReportGenerator;
 

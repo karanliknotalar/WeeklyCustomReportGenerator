@@ -33,7 +33,7 @@ public partial class TextPdfReader
                 Console.WriteLine($@"FİRMA ADI BULUNDU: {company.CompanyName}");
                 Console.WriteLine($@"Aramada Kullanılan Metin: {company.CompanySearchText}");
                 Console.WriteLine(@"---------------------------------------------------------");
-                Console.WriteLine("");
+                Console.WriteLine(@"");
 
                 var needsEuroConversion = company.EuroConversion == EuroConversionMode.WhenPathContains &&
                                           company.EuroConversionPathKeywords.Any(pdfPath.Contains);
@@ -84,7 +84,7 @@ public partial class TextPdfReader
                             ? matchEur.Groups[1].Value
                             : matchEur.Groups[2].Value;
 
-                        pdfReadResult.FoundTotalPrice = await EuroToTlConversion(pdfPathForDate:pdfPath, foundPrice!);
+                        pdfReadResult.FoundTotalPrice = await EuroToTlConversion(pdfPathForDate:pdfPath, foundPrice);
                         pdfReadResult.IsSuccess = true;
                     }
                 }
@@ -94,7 +94,11 @@ public partial class TextPdfReader
         }
         catch (Exception ex)
         {
-            pdfReadResult.IsSuccess = false;
+            if (!pdfReadResult.IsSuccess)
+            {
+                Console.WriteLine($@"{pdfPath} not read");
+            }
+            
             pdfReadResult.FoundCompany = "Error: " + ex.Message;
             Console.WriteLine(ex.Message);
         }
@@ -151,7 +155,7 @@ public partial class TextPdfReader
     private static async Task<string> EuroToTlConversion(string pdfPathForDate, string foundPrice)
     {
         var euroRate = await EuroRateFetcher.GetEuroRateFromFilePathAsync(pdfPathForDate);
-        var tlAmount = Tools.ParseTotalPrice(foundPrice!) * euroRate;
+        var tlAmount = Tools.ParseTotalPrice(foundPrice) * euroRate;
         return tlAmount.ToString("N2", new CultureInfo("tr-TR"));
     }
 }
