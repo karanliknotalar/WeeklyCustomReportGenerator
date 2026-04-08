@@ -18,7 +18,7 @@ namespace WeeklyCustomReportGenerator
 
         public static string DriveDirectory = "";
         private string _saveDirectory = "";
-        private string _year = "";
+        private string _year = DateTime.Now.Year.ToString();
         public static List<string> CustomerGalleryList = [];
         private List<PolicyItem> _policyItems = [];
 
