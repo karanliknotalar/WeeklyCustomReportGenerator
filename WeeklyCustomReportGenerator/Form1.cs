@@ -159,5 +159,10 @@ namespace WeeklyCustomReportGenerator
             txtDriveDir.Text = selectedDir;
             DriveDirectory = selectedDir;
         }
+
+        private void txtSaveDir_TextChanged(object sender, EventArgs e)
+        {
+            _saveDirectory = txtSaveDir.Text;
+        }
     }
 }

@@ -182,6 +182,7 @@
             this.txtSaveDir.Size = new System.Drawing.Size(589, 20);
             this.txtSaveDir.TabIndex = 18;
             this.txtSaveDir.Text = "C:\\Users\\ASUS\\GDrive\\A Belgeler\\İSTANBUL GRUP SİGORTA\\İstatistikler";
+            this.txtSaveDir.TextChanged += new System.EventHandler(this.txtSaveDir_TextChanged);
             // 
             // btnSave
             // 
