@@ -53,13 +53,13 @@ public class WeeklyReportBuilder()
                     DateTime.TryParse(parts[0], out date);
                     customerName = parts[1];
                 }
-
+                
                 var match = Regex.Match(fileName, platePattern,
                     RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
                 if (match.Success)
                 {
                     plate = match.Groups["Plaka"].Value.Trim();
-                    if (Form1.CustomerGalleryList.Any(n => n == customerName))
+                    if (Form1.CustomerGalleryList.Any(n => n.ToLower(TrCulture) == customerName.ToLower(TrCulture)))
                     {
                         isGalleryCustomer = true;
                     }
@@ -70,9 +70,9 @@ public class WeeklyReportBuilder()
 
                 foreach (var keyword in ProductKeywords!)
                 {
-                    var pattern = $@"\b{Regex.Escape(keyword.ToLower())}\b";
+                    var pattern = $@"\b{Regex.Escape(keyword.ToLower(TrCulture))}\b";
 
-                    if (!Regex.IsMatch(fileName.ToLower(), pattern,
+                    if (!Regex.IsMatch(fileName.ToLower(TrCulture), pattern,
                             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)) continue;
                     category = keyword;
                     break;
@@ -200,7 +200,7 @@ public class WeeklyReportBuilder()
 
             if (group != null)
             {
-                PrintGroup(sb, keyword.ToUpper(), group.ToList(), printStatus);
+                PrintGroup(sb, keyword.ToUpper(new CultureInfo("tr-TR")), group.ToList(), printStatus);
             }
         }
     }

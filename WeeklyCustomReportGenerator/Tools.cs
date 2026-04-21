@@ -12,6 +12,8 @@ namespace WeeklyCustomReportGenerator;
 
 public static class Tools
 {
+    private static readonly CultureInfo TrCulture = new CultureInfo("tr-TR");
+
     public static List<string> SearchFiles(string rootPath, Regex regex)
     {
         var searchFiles = new List<string>();
@@ -234,17 +236,17 @@ public static class Tools
             }
 
             var previousYear = currentItem.Date.Year - 1;
-            var escapedName = Regex.Escape(currentItem.CustomerName.ToLower());
-            var escapedPlate = Regex.Escape(currentItem.Plate.ToLower());
-            var escapedCategory = Regex.Escape(currentItem.Category.ToLower());
+            var escapedName = Regex.Escape(currentItem.CustomerName.ToLower(TrCulture));
+            var escapedPlate = Regex.Escape(currentItem.Plate.ToLower(TrCulture));
+            var escapedCategory = Regex.Escape(currentItem.Category.ToLower(TrCulture));
 
             var pattern = string.IsNullOrEmpty(currentItem.Plate)
                 ? $"(?i)(?:{previousYear}).*?{escapedName}.*?{escapedCategory}"
                 : $"(?i)(?:{previousYear}).*?{escapedName}.*?(?:(?:{escapedPlate}.*?{escapedCategory}.*)|(?:{escapedCategory}.*?{escapedPlate}.*))$";
 
-            var searchRegex = new Regex(pattern, RegexOptions.CultureInvariant);
+            var searchRegex = new Regex(pattern);
 
-            var isFound = allFileNames.Any(fileName => searchRegex.IsMatch(fileName.ToLower()));
+            var isFound = allFileNames.Any(fileName => searchRegex.IsMatch(fileName.ToLower(TrCulture)));
 
             if (isFound)
             {
@@ -296,7 +298,8 @@ public static class Tools
         {
             var logFilePath = Path.Combine("C:\\", "pdf_processing_log.txt");
             var patternToUse = company.EuroConversion == EuroConversionMode.WhenPathContains &&
-                               company.EuroConversionPathKeywords.Any(pdfPath.Contains) && company.EurTotalPriceRegexPattern != null
+                               company.EuroConversionPathKeywords.Any(pdfPath.Contains) &&
+                               company.EurTotalPriceRegexPattern != null
                 ? company.EurTotalPriceRegexPattern
                 : company.TlTotalPriceRegexPattern;
 
@@ -421,12 +424,10 @@ public static class Tools
         sb.AppendLine();
         sb.AppendLine("------------------ ------ --------- --------- --------- -------------- --------------");
 
-        var culture = new CultureInfo("tr-TR");
-
         foreach (var item in analysisData)
         {
-            var formattedTotalPrice = item.TotalPrice.ToString("N0", culture);
-            var formattedAveragePrice = item.AveragePrice.ToString("N0", culture);
+            var formattedTotalPrice = item.TotalPrice.ToString("N0", TrCulture);
+            var formattedAveragePrice = item.AveragePrice.ToString("N0", TrCulture);
 
             sb.Append(item.Category.Trim().PadRight(colWidthCategory));
             sb.Append(item.TotalCount.ToString().PadLeft(colWidthTotalCount));
@@ -484,5 +485,20 @@ public static class Tools
         dialog.ShowNewFolderButton = true;
         var result = dialog.ShowDialog();
         return result == DialogResult.OK ? dialog.SelectedPath : string.Empty;
+    }
+
+    public static class String
+    {
+        public static bool Equals(string? source, string? target)
+        {
+            if (source == null && target == null) return true;
+            if (source == null || target == null) return false;
+
+            return string.Equals(
+                source.ToLower(TrCulture),
+                target.ToLower(TrCulture),
+                StringComparison.Ordinal
+            );
+        }
     }
 }
