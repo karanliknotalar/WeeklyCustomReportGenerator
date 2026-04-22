@@ -58,7 +58,7 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "hepiyi.com.tr|Hepiyi Çözüm Merkezi",
+            CompanySearchText = "hepiyi.com.tr|Hepiyi Çözüm Merkezi|SİGORTALI / SİGORTA ETTİREN HEPİYİ SİGORTA A.Ş.",
             CompanyName = "HEPIYI",
             TlTotalPriceRegexPattern = @"(?i)(?:brüt\s*prim|iade\s*edilecek\s*prim)\s*[:]?\s*(-?\d[\d.,]*)",
             EuroConversion = EuroConversionMode.WhenPathContains,
