@@ -161,7 +161,7 @@
             this.tableLayoutPanel1.SetRowSpan(this.txtProducts, 2);
             this.txtProducts.Size = new System.Drawing.Size(67, 277);
             this.txtProducts.TabIndex = 10;
-            this.txtProducts.Text = "Trafik\r\nKasko\r\nYeşilsigorta\r\nZ.Koltuk\r\nYol Yardım\r\nIMM\r\nTSS\r\nYSS\r\nDASK\r\nKONUT\r\nİŞ" + "YERİ\r\nTMTAS\r\nK. Ferdi Kaza\r\nFerdi Kaza\r\nFFL\r\nCMR";
+            this.txtProducts.Text = "Trafik\r\nKasko\r\nYeşilsigorta\r\nZ.Koltuk\r\nYol Yardım\r\nIMM\r\nTSS\r\nYSS\r\nÖSS\r\nDASK\r\nKONU" + "T\r\nİŞYERİ\r\nTMTAS\r\nK. Ferdi Kaza\r\nFerdi Kaza\r\nFFL\r\nCMR\r\nTıbbi Kötü Uygulama\r\nMSS";
             // 
             // lblSaveDir
             // 
