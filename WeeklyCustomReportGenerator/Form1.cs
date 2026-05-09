@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MiniExcelLibs;
 
@@ -52,35 +53,36 @@ namespace WeeklyCustomReportGenerator
             RunProcess();
         }
 
-        private void GetDirList(string regexPattern = "")
+        private async void GetDirList(string regexPattern = "")
         {
-            if (listRegexPattern.SelectedItem == null && string.IsNullOrEmpty(regexPattern)) return;
-            
-            EnableControls(false);
-
-            var selectedPattern = listRegexPattern.SelectedItem?.ToString() ?? regexPattern;
-
-            var targetDirectory = txtDriveDir.Text;
-
             try
             {
-                var regex = new Regex(selectedPattern, RegexOptions.Compiled);
+                if (listRegexPattern.SelectedItem == null && string.IsNullOrEmpty(regexPattern)) return;
 
-                string[] excludeKeywords =
-                    ["A Belgeler", "DIŞ_KAYNAK_HESAPLAR_LİSTESİ", "LİSTELER", "PORTFÖY", "appsheet"];
+                EnableControls(false);
 
-                txtInput.Lines = Tools.SearchFiles(targetDirectory, regex)
-                    .Where(path => !excludeKeywords.Any(k => path.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0))
-                    .ToArray();
+                var selectedPattern = listRegexPattern.SelectedItem?.ToString() ?? regexPattern;
+                var targetDirectory = txtDriveDir.Text;
 
-                if (txtInput.Lines.Length <= 0)
+                var files = await Task.Run(() =>
                 {
-                    EnableControls(true);
-                }
+                    var regex = new Regex(selectedPattern, RegexOptions.Compiled);
+                    string[] excludeKeywords =
+                        ["A Belgeler", "DIŞ_KAYNAK_HESAPLAR_LİSTESİ", "LİSTELER", "PORTFÖY", "appsheet"];
+
+                    return Tools.SearchFiles(targetDirectory, regex)
+                        .Where(path =>
+                            !excludeKeywords.Any(k => path.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0))
+                        .ToArray();
+                });
+
+                txtInput.Lines = files;
+
+                if (files.Length <= 0) EnableControls(true);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                MessageBox.Show(@$"Arama sırasında hata: {ex.Message}");
             }
         }
 
@@ -228,8 +230,8 @@ namespace WeeklyCustomReportGenerator
 
             var shortedStr = realStr.Substring(89, realStr.Length - 97);
 
-            var brush = ((e.State & DrawItemState.Selected) == DrawItemState.Selected) 
-                ? Brushes.White 
+            var brush = ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                ? Brushes.White
                 : Brushes.Black;
 
             e.Graphics.DrawString(shortedStr, e.Font, brush, e.Bounds);
