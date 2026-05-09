@@ -41,6 +41,8 @@
             this.lblSaveDir = new System.Windows.Forms.Label();
             this.txtSaveDir = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
+            this.cBoxYear = new System.Windows.Forms.ComboBox();
+            this.cBoxMonth = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,6 +63,8 @@
             this.tableLayoutPanel1.Controls.Add(this.lblSaveDir, 2, 5);
             this.tableLayoutPanel1.Controls.Add(this.txtSaveDir, 3, 5);
             this.tableLayoutPanel1.Controls.Add(this.btnSave, 2, 6);
+            this.tableLayoutPanel1.Controls.Add(this.cBoxYear, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.cBoxMonth, 1, 5);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -81,14 +85,13 @@
             // 
             // txtGalleryCustomerList
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.txtGalleryCustomerList, 2);
             this.txtGalleryCustomerList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtGalleryCustomerList.Location = new System.Drawing.Point(8, 601);
             this.txtGalleryCustomerList.Multiline = true;
             this.txtGalleryCustomerList.Name = "txtGalleryCustomerList";
             this.tableLayoutPanel1.SetRowSpan(this.txtGalleryCustomerList, 5);
             this.txtGalleryCustomerList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtGalleryCustomerList.Size = new System.Drawing.Size(416, 95);
+            this.txtGalleryCustomerList.Size = new System.Drawing.Size(343, 95);
             this.txtGalleryCustomerList.TabIndex = 16;
             this.txtGalleryCustomerList.Text = resources.GetString("txtGalleryCustomerList.Text");
             // 
@@ -141,8 +144,8 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.listRegexPattern, 2);
             this.listRegexPattern.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listRegexPattern.FormattingEnabled = true;
-            this.listRegexPattern.HorizontalExtent = 800;
+            this.listRegexPattern.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.listRegexPattern.HorizontalExtent = 430;
             this.listRegexPattern.HorizontalScrollbar = true;
             this.listRegexPattern.Location = new System.Drawing.Point(8, 291);
             this.listRegexPattern.Name = "listRegexPattern";
@@ -150,6 +153,7 @@
             this.listRegexPattern.Size = new System.Drawing.Size(416, 304);
             this.listRegexPattern.TabIndex = 15;
             this.listRegexPattern.Click += new System.EventHandler(this.listRegexPattern_Click);
+            this.listRegexPattern.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listRegexPattern_DrawItem);
             this.listRegexPattern.SelectedIndexChanged += new System.EventHandler(this.listRegexPattern_SelectedIndexChanged);
             // 
             // txtProducts
@@ -196,6 +200,32 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // cBoxYear
+            // 
+            this.cBoxYear.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cBoxYear.FormattingEnabled = true;
+            this.cBoxYear.Location = new System.Drawing.Point(357, 601);
+            this.cBoxYear.Name = "cBoxYear";
+            this.cBoxYear.Size = new System.Drawing.Size(67, 21);
+            this.cBoxYear.TabIndex = 21;
+            this.cBoxYear.Text = "Yıl Seç";
+            this.cBoxYear.SelectedIndexChanged += new System.EventHandler(this.cBoxYear_SelectedIndexChanged);
+            this.cBoxYear.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cBox_KeyPress);
+            // 
+            // cBoxMonth
+            // 
+            this.cBoxMonth.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cBoxMonth.Enabled = false;
+            this.cBoxMonth.FormattingEnabled = true;
+            this.cBoxMonth.Items.AddRange(new object[] { "all", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" });
+            this.cBoxMonth.Location = new System.Drawing.Point(357, 621);
+            this.cBoxMonth.Name = "cBoxMonth";
+            this.cBoxMonth.Size = new System.Drawing.Size(67, 21);
+            this.cBoxMonth.TabIndex = 20;
+            this.cBoxMonth.Text = "Ay Seç";
+            this.cBoxMonth.SelectionChangeCommitted += new System.EventHandler(this.cBoxMonth_SelectionChangeCommitted);
+            this.cBoxMonth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cBox_KeyPress);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -209,6 +239,10 @@
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.ComboBox cBoxYear;
+
+        private System.Windows.Forms.ComboBox cBoxMonth;
 
         private System.Windows.Forms.Label lblSaveDir;
 

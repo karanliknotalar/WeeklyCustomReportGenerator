@@ -71,12 +71,12 @@ public static class Tools
         var today = DateTime.Now.Date;
         var weeklyRegexList = new List<string>();
 
-        var year = today.Year - 2;
-        for (var j = 0; j < 3; j++)
-        {
-            weeklyRegexList.Add(staticPrefix + @"(\d{2}\.\d{2}\." + year + @").*\.pdf$");
-            year++;
-        }
+        // var year = today.Year - 2;
+        // for (var j = 0; j < 3; j++)
+        // {
+        //     weeklyRegexList.Add(staticPrefix + @"(\d{2}\.\d{2}\." + year + @").*\.pdf$");
+        //     year++;
+        // }
 
         var yearStart = new DateTime(today.Year, 1, 1);
 
