@@ -221,27 +221,18 @@ namespace WeeklyCustomReportGenerator
 
         private void listRegexPattern_DrawItem(object sender, DrawItemEventArgs e)
         {
-            // Liste boşsa hata vermemesi için
             if (e.Index < 0) return;
-
-            // Seçili satırın arka planını (mavi şerit) çiz
             e.DrawBackground();
-
-            // ListBox içindeki asıl (uzun) metni al
-            string asilMetin = listRegexPattern.Items[e.Index].ToString();
+            var realStr = listRegexPattern.Items[e.Index].ToString();
 
 
-            string kisaMetin = asilMetin.Substring(89, asilMetin.Length - 97);
+            var shortedStr = realStr.Substring(89, realStr.Length - 97);
 
-            // Metnin rengini belirle (Seçiliyse beyaz, değilse siyah)
-            Brush firca = ((e.State & DrawItemState.Selected) == DrawItemState.Selected) 
+            var brush = ((e.State & DrawItemState.Selected) == DrawItemState.Selected) 
                 ? Brushes.White 
                 : Brushes.Black;
 
-            // Metni ListBox yüzeyine elle yazdır
-            e.Graphics.DrawString(kisaMetin, e.Font, firca, e.Bounds);
-
-            // Odak çerçevesini çiz
+            e.Graphics.DrawString(shortedStr, e.Font, brush, e.Bounds);
             e.DrawFocusRectangle();
         }
     }
