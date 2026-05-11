@@ -127,6 +127,7 @@
         <Compile Include="Form1.Designer.cs">
             <DependentUpon>Form1.cs</DependentUpon>
         </Compile>
+        <Compile Include="ProgressReporter.cs" />
         <Compile Include="TextPdfReader.cs" />
         <Compile Include="PdfReadResult.cs" />
         <Compile Include="PolicyItem.cs" />

@@ -24,9 +24,11 @@ namespace WeeklyCustomReportGenerator
         private string _month = string.Empty;
         public static List<string> CustomerGalleryList = [];
         private List<PolicyItem> _policyItems = [];
+        private string _tempName = string.Empty;
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            _tempName = this.Text;
             listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
                 .ToArray<object>());
             DriveDirectory = txtDriveDir.Text;
@@ -41,6 +43,21 @@ namespace WeeklyCustomReportGenerator
 
             cBoxYear.Items.AddRange(Enumerable.Range(DateTime.Now.Year - 2, 3).Select(y => y.ToString())
                 .ToArray<object>());
+
+            ProgressReporter.OnProgressChanged = (value) =>
+            {
+                if (progressBar1.InvokeRequired)
+                {
+                    progressBar1.Invoke(new Action(() => progressBar1.Value = value));
+                }
+                else
+                {
+                    progressBar1.Value = value;
+                }
+                
+                var processStr = value == 100 ? "| Pdfler İşlendi Çıktı hazırlanıyor..." : "";
+                this.Text =  @$"{_tempName} | İşleniyor: {value}% {processStr}";
+            };
         }
 
         private void listRegexPattern_SelectedIndexChanged(object sender, EventArgs e)
@@ -85,17 +102,26 @@ namespace WeeklyCustomReportGenerator
                 MessageBox.Show(@$"Arama sırasında hata: {ex.Message}");
             }
         }
-
+        
         private async void RunProcess()
         {
             try
             {
+                EnableControls(false);
+
                 var files = txtInput.Text.Split(["\r\n", "\n"], StringSplitOptions.RemoveEmptyEntries);
                 var productOrder = txtProducts.Lines;
-                var builder = new WeeklyReportBuilder(productOrder);
-                _policyItems = await builder.ParseFiles(files);
 
-                txtOutput.Text = builder.BuildReport(_policyItems);
+                var resultText = await Task.Run(async () =>
+                {
+                    var builder = new WeeklyReportBuilder(productOrder);
+            
+                    _policyItems = await builder.ParseFiles(files);
+
+                    return builder.BuildReport(_policyItems);
+                });
+
+                txtOutput.Text = resultText;
             }
             catch (Exception ex)
             {
@@ -104,6 +130,8 @@ namespace WeeklyCustomReportGenerator
             finally
             {
                 EnableControls(true);
+                progressBar1.Value = 0;
+                this.Text = _tempName;
             }
         }
 
@@ -214,6 +242,9 @@ namespace WeeklyCustomReportGenerator
             {
                 ctrl.Enabled = state;
             }
+
+            listRegexPattern.Invalidate();
+            this.Update();
         }
 
         private void cBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -227,7 +258,7 @@ namespace WeeklyCustomReportGenerator
 
             e.DrawBackground();
 
-            var realStr = listRegexPattern.Items[e.Index].ToString() ?? "";
+            var realStr = listRegexPattern.Items[e.Index].ToString();
             var shortedStr = realStr.Substring(89, realStr.Length - 97);
 
             Brush brush;

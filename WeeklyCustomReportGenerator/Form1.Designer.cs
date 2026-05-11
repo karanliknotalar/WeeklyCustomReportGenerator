@@ -43,6 +43,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.cBoxYear = new System.Windows.Forms.ComboBox();
             this.cBoxMonth = new System.Windows.Forms.ComboBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,6 +66,7 @@
             this.tableLayoutPanel1.Controls.Add(this.btnSave, 2, 6);
             this.tableLayoutPanel1.Controls.Add(this.cBoxYear, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.cBoxMonth, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.progressBar1, 3, 7);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -226,6 +228,15 @@
             this.cBoxMonth.SelectionChangeCommitted += new System.EventHandler(this.cBoxMonth_SelectionChangeCommitted);
             this.cBoxMonth.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cBox_KeyPress);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.progressBar1.Location = new System.Drawing.Point(558, 661);
+            this.progressBar1.Name = "progressBar1";
+            this.tableLayoutPanel1.SetRowSpan(this.progressBar1, 2);
+            this.progressBar1.Size = new System.Drawing.Size(589, 35);
+            this.progressBar1.TabIndex = 22;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -239,6 +250,8 @@
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.ProgressBar progressBar1;
 
         private System.Windows.Forms.ComboBox cBoxYear;
 

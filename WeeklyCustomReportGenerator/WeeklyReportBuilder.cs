@@ -25,14 +25,21 @@ public class WeeklyReportBuilder()
     {
         var items = new List<PolicyItem>();
 
+        var enumerable = lines.ToList();
+        var totalCount = enumerable.ToList().Count;
+        var counter = 0;
+
         try
         {
             const string platePattern = @"(?<Plaka>(\d{2}[A-Z]{1,3}\d{1,5}|\d{2}[A-Z]{2}))";
 
             var pdfReader = new TextPdfReader();
 
-            foreach (var path in lines)
+            foreach (var path in enumerable)
             {
+                var percentage = (int)((counter + 1) / (float)totalCount * 100);
+                ProgressReporter.OnProgressChanged?.Invoke(percentage);
+
                 if (string.IsNullOrWhiteSpace(path)) continue;
 
                 var result = await pdfReader.ProcessPdf(path);
@@ -53,7 +60,7 @@ public class WeeklyReportBuilder()
                     DateTime.TryParse(parts[0], out date);
                     customerName = parts[1];
                 }
-                
+
                 var match = Regex.Match(fileName, platePattern,
                     RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
                 if (match.Success)
@@ -90,6 +97,7 @@ public class WeeklyReportBuilder()
                     Company = result.FoundCompany,
                     TotalPrice = result.FoundTotalPrice
                 });
+                counter++;
             }
         }
         catch (Exception e)
@@ -115,7 +123,7 @@ public class WeeklyReportBuilder()
 
         // --- İSTATİSTİK ---
         PrintStatistics(items, sb);
-        
+
         // --- ÜRETİMLER ---
         sb.AppendLine($"ÜRETİMLER ({activeItems.Count:D2}):");
         sb.AppendLine();
@@ -132,15 +140,15 @@ public class WeeklyReportBuilder()
         sb.AppendLine($"İPTALLER ({cancelledItems.Count:D2}):");
         sb.AppendLine();
         GenerateGroup(groupCancelled, sb);
-        
+
         // --- DİĞER İPTAL GRUPLANMAYANLAR --- 
         if (groupOtherCancelled != null)
         {
             PrintGroup(sb, "DİĞER", groupOtherCancelled.ToList());
         }
-        
+
         Tools.AppendToLogFileForUndefined(items.Where(x => string.IsNullOrEmpty(x.TotalPrice)).ToList());
-        
+
         return sb.ToString();
     }
 
