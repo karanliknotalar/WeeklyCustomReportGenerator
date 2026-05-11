@@ -224,18 +224,30 @@ namespace WeeklyCustomReportGenerator
         private void listRegexPattern_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0) return;
+
             e.DrawBackground();
-            var realStr = listRegexPattern.Items[e.Index].ToString();
 
-
+            var realStr = listRegexPattern.Items[e.Index].ToString() ?? "";
             var shortedStr = realStr.Substring(89, realStr.Length - 97);
 
-            var brush = ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
-                ? Brushes.White
-                : Brushes.Black;
+            Brush brush;
+            if (!listRegexPattern.Enabled)
+            {
+                brush = Brushes.Gray;
+            }
+            else
+            {
+                brush = ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+                    ? Brushes.White
+                    : Brushes.Black;
+            }
 
             e.Graphics.DrawString(shortedStr, e.Font, brush, e.Bounds);
-            e.DrawFocusRectangle();
+
+            if (listRegexPattern.Enabled)
+            {
+                e.DrawFocusRectangle();
+            }
         }
     }
 }
