@@ -24,7 +24,8 @@ public partial class TextPdfReader
             Tools.AppendToLogFile(pdfContent, pdfPath, new Company());
 
 
-            foreach (var company in _companies.Where(company => Tools.SearchCompanyText(pdfContent, company.CompanySearchText)))
+            foreach (var company in _companies.Where(company =>
+                         Tools.SearchCompanyText(pdfContent, company.CompanySearchText)))
             {
                 pdfReadResult.FoundCompany = company.CompanyName;
 
@@ -44,27 +45,29 @@ public partial class TextPdfReader
                     ? company.EurTotalPriceRegexPattern
                     : company.TlTotalPriceRegexPattern;
 
-                var match = Regex.Match(pdfContent, patternToUse, RegexOptions.IgnoreCase);
+                // var match = Regex.Match(pdfContent, patternToUse, RegexOptions.IgnoreCase);
                 var matches = Regex.Matches(pdfContent, patternToUse, RegexOptions.IgnoreCase);
-                if (match.Success)
+                if (matches.Count > 0)
                 {
                     // var foundPrice = !string.IsNullOrEmpty(match.Groups[1].Value)
                     //     ? match.Groups[1].Value
                     //     : match.Groups[2].Value;
-                    
+
                     var bestMatch = matches.Cast<Match>()
                         .OrderByDescending(m => m.Value.Contains("(TL)"))
                         .ThenByDescending(m => m.Value.Contains("Döviz Karşõlõğõ"))
                         .ThenBy(m => m.Index)
                         .FirstOrDefault();
-                    
-                    var foundPrice = !string.IsNullOrEmpty(bestMatch?.Groups[1].Value)
-                        ? bestMatch?.Groups[1].Value
-                        : bestMatch?.Groups[2].Value;
+
+                    // var foundPrice = !string.IsNullOrEmpty(bestMatch?.Groups[1].Value)
+                    //     ? bestMatch?.Groups[1].Value
+                    //     : bestMatch?.Groups[2].Value;
+
+                    var foundPrice = bestMatch?.Groups[1].Value is { Length: > 0 } g1 ? g1 : bestMatch?.Groups[2].Value;
 
                     if (needsEuroConversion || definitelyNeedsEuroConversion)
                     {
-                        pdfReadResult.FoundTotalPrice = await EuroToTlConversion(pdfPathForDate:pdfPath, foundPrice!);
+                        pdfReadResult.FoundTotalPrice = await EuroToTlConversion(pdfPathForDate: pdfPath, foundPrice!);
                     }
                     else
                     {
@@ -84,7 +87,7 @@ public partial class TextPdfReader
                             ? matchEur.Groups[1].Value
                             : matchEur.Groups[2].Value;
 
-                        pdfReadResult.FoundTotalPrice = await EuroToTlConversion(pdfPathForDate:pdfPath, foundPrice);
+                        pdfReadResult.FoundTotalPrice = await EuroToTlConversion(pdfPathForDate: pdfPath, foundPrice);
                         pdfReadResult.IsSuccess = true;
                     }
                 }
@@ -94,11 +97,6 @@ public partial class TextPdfReader
         }
         catch (Exception ex)
         {
-            if (!pdfReadResult.IsSuccess)
-            {
-                Console.WriteLine($@"{pdfPath} not read");
-            }
-            
             pdfReadResult.FoundCompany = "Error: " + ex.Message;
             Console.WriteLine(ex.Message);
         }
@@ -116,7 +114,7 @@ public partial class TextPdfReader
             using (var reader = new PdfReader(filePath))
             using (var pdf = new PdfDocument(reader))
             {
-                for (var i = 1; i <= pdf.GetNumberOfPages(); i++)
+                for (var i = 1; i <= Math.Min(pdf.GetNumberOfPages(), 15); i++)
                 {
                     var strategy = new LocationTextExtractionStrategy();
 
@@ -130,25 +128,7 @@ public partial class TextPdfReader
         }
         catch (Exception ex)
         {
-            var msg = new StringBuilder();
-            msg.AppendLine("PDF OKUMA HATASI OLUŞTU:");
-            msg.AppendLine("---------------------------------------");
-            msg.AppendLine("Hata Tipi: " + ex.GetType().FullName);
-            msg.AppendLine("Mesaj: " + ex.Message);
-            msg.AppendLine("---------------------------------------");
-
-            if (ex.InnerException != null)
-            {
-                msg.AppendLine("InnerException Tipi: " + ex.InnerException.GetType().FullName);
-                msg.AppendLine("InnerException Mesajı: " + ex.InnerException.Message);
-                msg.AppendLine("---------------------------------------");
-            }
-
-            msg.AppendLine("StackTrace:");
-            msg.AppendLine(ex.StackTrace);
-
-            Console.WriteLine(msg.ToString());
-            return msg.ToString();
+            return Tools.PrintError(ex, "PDF OKUMA HATASI OLUŞTU:");
         }
     }
 

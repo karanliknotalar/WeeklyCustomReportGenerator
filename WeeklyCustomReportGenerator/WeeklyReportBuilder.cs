@@ -15,10 +15,19 @@ public class WeeklyReportBuilder()
     private List<string>? ProductKeywords { get; set; }
     private CultureInfo? TrCulture { get; set; }
 
+    private readonly Dictionary<string, Regex> _compiledPatterns = new();
+
     public WeeklyReportBuilder(string[] productOrder) : this()
     {
         ProductKeywords = productOrder.ToList();
         TrCulture = CultureInfo.GetCultureInfo("tr-TR");
+
+        foreach (var keyword in productOrder)
+        {
+            var pattern = $@"\b{Regex.Escape(keyword.ToLower(TrCulture))}\b";
+            _compiledPatterns[keyword] = new Regex(pattern,
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+        }
     }
 
     public async Task<List<PolicyItem>> ParseFiles(IEnumerable<string> lines)
@@ -26,7 +35,7 @@ public class WeeklyReportBuilder()
         var items = new List<PolicyItem>();
 
         var enumerable = lines.ToList();
-        var totalCount = enumerable.ToList().Count;
+        var totalCount = enumerable.Count;
         var counter = 0;
 
         try
@@ -71,19 +80,12 @@ public class WeeklyReportBuilder()
                         isGalleryCustomer = true;
                     }
                 }
+                
+                var fileNameLower = fileName.ToLower(TrCulture);
 
-                var category = "DİĞER";
-
-
-                foreach (var keyword in ProductKeywords!)
-                {
-                    var pattern = $@"\b{Regex.Escape(keyword.ToLower(TrCulture))}\b";
-
-                    if (!Regex.IsMatch(fileName.ToLower(TrCulture), pattern,
-                            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)) continue;
-                    category = keyword;
-                    break;
-                }
+                var matchedKeyword = ProductKeywords!.FirstOrDefault(keyword =>
+                    _compiledPatterns[keyword].IsMatch(fileNameLower));
+                var category = matchedKeyword ?? "DİĞER";
 
                 items.Add(new PolicyItem
                 {
@@ -122,7 +124,7 @@ public class WeeklyReportBuilder()
         var groupOtherCancelled = groupCancelled.FirstOrDefault(g => g.Key == "DİĞER");
 
         // --- İSTATİSTİK ---
-        PrintStatistics(items, sb);
+        PrintStatistics(items, sb, activeItems, cancelledItems);
 
         // --- ÜRETİMLER ---
         sb.AppendLine($"ÜRETİMLER ({activeItems.Count:D2}):");
@@ -152,10 +154,9 @@ public class WeeklyReportBuilder()
         return sb.ToString();
     }
 
-    private void PrintStatistics(List<PolicyItem> items, StringBuilder sb)
+    private void PrintStatistics(List<PolicyItem> items, StringBuilder sb,
+        List<PolicyItem> activeItems, List<PolicyItem> cancelledItems)
     {
-        var activeItems = items.Where(x => !x.IsCancel).ToList();
-        var cancelledItems = items.Where(x => x.IsCancel).ToList();
         const int colWidthLabel = 30;
         const int colWidthValue = 17;
 
@@ -217,8 +218,8 @@ public class WeeklyReportBuilder()
         bool printStatus = false)
     {
         var sortedList = list.OrderBy(x => x.Date).ThenBy(x => x.FullLine).ToList();
-        var renewListCount = list.Where(x => x.IsRenewal).ToList().Count;
-        var galleryListCount = list.Where(x => x.IsGalleryCustomer).ToList().Count;
+        var renewListCount = list.Count(x => x.IsRenewal);
+        var galleryListCount = list.Count(x => x.IsGalleryCustomer);
 
         var renewTxt = renewListCount != 0 ? $"|{renewListCount:D2} Yenileme" : "";
         var newTxt = (sortedList.Count - renewListCount) != 0 ? $"|{sortedList.Count - renewListCount:D2} Yeni" : "";

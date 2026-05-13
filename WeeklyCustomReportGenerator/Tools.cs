@@ -501,4 +501,27 @@ public static class Tools
             );
         }
     }
+
+    public static string PrintError(Exception ex, string errorTitle)
+    {
+        var msg = new StringBuilder();
+        msg.AppendLine(errorTitle);
+        msg.AppendLine("---------------------------------------");
+        msg.AppendLine("Hata Tipi: " + ex.GetType().FullName);
+        msg.AppendLine("Mesaj: " + ex.Message);
+        msg.AppendLine("---------------------------------------");
+
+        if (ex.InnerException != null)
+        {
+            msg.AppendLine("InnerException Tipi: " + ex.InnerException.GetType().FullName);
+            msg.AppendLine("InnerException Mesajı: " + ex.InnerException.Message);
+            msg.AppendLine("---------------------------------------");
+        }
+
+        msg.AppendLine("StackTrace:");
+        msg.AppendLine(ex.StackTrace);
+
+        Console.WriteLine(msg.ToString());
+        return msg.ToString();
+    }
 }

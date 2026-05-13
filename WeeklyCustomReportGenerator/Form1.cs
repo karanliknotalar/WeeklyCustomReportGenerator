@@ -25,9 +25,11 @@ namespace WeeklyCustomReportGenerator
         public static List<string> CustomerGalleryList = [];
         private List<PolicyItem> _policyItems = [];
         private string _tempName = string.Empty;
+        private Control[] _managedControls;
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            _managedControls = [listRegexPattern, cBoxYear, cBoxMonth, btnSave, txtInput, txtProducts, txtGalleryCustomerList];
             _tempName = this.Text;
             listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
                 .ToArray<object>());
@@ -46,18 +48,22 @@ namespace WeeklyCustomReportGenerator
 
             ProgressReporter.OnProgressChanged = (value) =>
             {
-                if (progressBar1.InvokeRequired)
+                if (InvokeRequired)
                 {
-                    progressBar1.Invoke(new Action(() => progressBar1.Value = value));
+                    Invoke(() => UpdateProgress(value));
+                    return;
                 }
-                else
-                {
-                    progressBar1.Value = value;
-                }
-                
-                var processStr = value == 100 ? "| Pdfler İşlendi Çıktı hazırlanıyor..." : "";
-                this.Text =  @$"{_tempName} | İşleniyor: {value}% {processStr}";
+
+                UpdateProgress(value);
             };
+        }
+
+        private void UpdateProgress(int value)
+        {
+            progressBar1.Value = value;
+            this.Text = value == 100
+                ? $"{_tempName} | Pdfler İşlendi, çıktı hazırlanıyor..."
+                : $"{_tempName} | İşleniyor: {value}%";
         }
 
         private void listRegexPattern_SelectedIndexChanged(object sender, EventArgs e)
@@ -102,8 +108,20 @@ namespace WeeklyCustomReportGenerator
                 MessageBox.Show(@$"Arama sırasında hata: {ex.Message}");
             }
         }
-        
+
         private async void RunProcess()
+        {
+            try
+            {
+                await RunProcessAsync();
+            }
+            catch (Exception e)
+            {
+                Tools.PrintError(e, "RunProcess FUNC ERROR: ");
+            }
+        }
+
+        private async Task RunProcessAsync()
         {
             try
             {
@@ -115,7 +133,7 @@ namespace WeeklyCustomReportGenerator
                 var resultText = await Task.Run(async () =>
                 {
                     var builder = new WeeklyReportBuilder(productOrder);
-            
+
                     _policyItems = await builder.ParseFiles(files);
 
                     return builder.BuildReport(_policyItems);
@@ -142,9 +160,8 @@ namespace WeeklyCustomReportGenerator
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (!_policyItems.Any()) return;
-
-
+            if (_policyItems.Count == 0) return;
+            
             var activeItems = _policyItems.Where(x => !x.IsCancel).ToList();
             var cancelledItems = _policyItems.Where(x => x.IsCancel).ToList();
 
@@ -234,11 +251,11 @@ namespace WeeklyCustomReportGenerator
             GetDirList(pattern);
         }
 
+        
         private void EnableControls(bool state)
         {
-            Control[] controls =
-                [listRegexPattern, cBoxYear, cBoxMonth, btnSave, txtInput, txtProducts, txtGalleryCustomerList];
-            foreach (var ctrl in controls)
+                
+            foreach (var ctrl in _managedControls)
             {
                 ctrl.Enabled = state;
             }
@@ -259,7 +276,9 @@ namespace WeeklyCustomReportGenerator
             e.DrawBackground();
 
             var realStr = listRegexPattern.Items[e.Index].ToString();
-            var shortedStr = realStr.Substring(89, realStr.Length - 97);
+            var shortedStr = realStr.Length > 97 
+                ? realStr.Substring(89, realStr.Length - 97) 
+                : realStr;
 
             Brush brush;
             if (!listRegexPattern.Enabled)
