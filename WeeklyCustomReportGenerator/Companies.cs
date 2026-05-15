@@ -171,7 +171,7 @@ public partial class TextPdfReader
         new Company
         {
             CompanySearchText =
-                "Sigorta Şirket Unvanı MAPFRE Sigorta A.Ş|mapfre.com.tr|MAPFRE SİGORTA A.Ş.\nSigorta Şirketi Ünvanı",
+                "879 001 8869|Sigorta Şirket Unvanı MAPFRE Sigorta A.Ş|mapfre.com.tr|MAPFRE SİGORTA A.Ş.\nSigorta Şirketi Ünvanı",
             CompanyName = "MAPFRE",
             TlTotalPriceRegexPattern =
                 @"(?i)(?:Ödenecek\sTutar\s\(TL\)|BRÜT\sPRIM|BRÜT\sPRİM)\s*[:]?\s*(-?\d[\d.,]*)"
