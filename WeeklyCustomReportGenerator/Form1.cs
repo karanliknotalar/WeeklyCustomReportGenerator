@@ -25,11 +25,12 @@ namespace WeeklyCustomReportGenerator
         public static List<string> CustomerGalleryList = [];
         private List<PolicyItem> _policyItems = [];
         private string _tempName = string.Empty;
-        private Control[] _managedControls;
+        private Control[]? _managedControls;
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _managedControls = [listRegexPattern, cBoxYear, cBoxMonth, btnSave, txtInput, txtProducts, txtGalleryCustomerList];
+            _managedControls =
+                [listRegexPattern, cBoxYear, cBoxMonth, btnSave, txtInput, txtProducts, txtGalleryCustomerList];
             _tempName = this.Text;
             listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
                 .ToArray<object>());
@@ -161,7 +162,7 @@ namespace WeeklyCustomReportGenerator
         private void btnSave_Click(object sender, EventArgs e)
         {
             if (_policyItems.Count == 0) return;
-            
+
             var activeItems = _policyItems.Where(x => !x.IsCancel).ToList();
             var cancelledItems = _policyItems.Where(x => x.IsCancel).ToList();
 
@@ -251,14 +252,14 @@ namespace WeeklyCustomReportGenerator
             GetDirList(pattern);
         }
 
-        
+
         private void EnableControls(bool state)
         {
-                
-            foreach (var ctrl in _managedControls)
-            {
-                ctrl.Enabled = state;
-            }
+            if (_managedControls != null)
+                foreach (var ctrl in _managedControls)
+                {
+                    ctrl.Enabled = state;
+                }
 
             listRegexPattern.Invalidate();
             this.Update();
@@ -276,9 +277,14 @@ namespace WeeklyCustomReportGenerator
             e.DrawBackground();
 
             var realStr = listRegexPattern.Items[e.Index].ToString();
-            var shortedStr = realStr.Length > 97 
-                ? realStr.Substring(89, realStr.Length - 97) 
+            var shortedStr = realStr.Length > 97
+                ? realStr.Substring(89, realStr.Length - 97)
                 : realStr;
+
+            var startDate = shortedStr.Substring(1, 10);
+            var endDate = shortedStr.Substring(shortedStr.Length - 11, 10);
+
+            var finalStr = $"{startDate} ile {endDate} tarihi arasındakiler";
 
             Brush brush;
             if (!listRegexPattern.Enabled)
@@ -292,7 +298,7 @@ namespace WeeklyCustomReportGenerator
                     : Brushes.Black;
             }
 
-            e.Graphics.DrawString(shortedStr, e.Font, brush, e.Bounds);
+            e.Graphics.DrawString(finalStr, e.Font, brush, e.Bounds);
 
             if (listRegexPattern.Enabled)
             {

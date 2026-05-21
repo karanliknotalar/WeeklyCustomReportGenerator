@@ -147,7 +147,6 @@
             this.tableLayoutPanel1.SetColumnSpan(this.listRegexPattern, 2);
             this.listRegexPattern.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listRegexPattern.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.listRegexPattern.HorizontalExtent = 430;
             this.listRegexPattern.HorizontalScrollbar = true;
             this.listRegexPattern.Location = new System.Drawing.Point(8, 291);
             this.listRegexPattern.Name = "listRegexPattern";
