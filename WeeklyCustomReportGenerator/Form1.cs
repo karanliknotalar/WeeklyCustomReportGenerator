@@ -247,7 +247,7 @@ namespace WeeklyCustomReportGenerator
             _month = selectedMonth == "all" ? string.Empty : selectedMonth;
 
             var pattern =
-                @$"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{{2}}\.{month}.{year}).*\.pdf$";
+                @$"(?i)^(?!.*\b(?:makbuz|eng|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{{2}}\.{month}.{year}).*\.pdf$";
 
             GetDirList(pattern);
         }

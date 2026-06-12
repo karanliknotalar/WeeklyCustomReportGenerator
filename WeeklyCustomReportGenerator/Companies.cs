@@ -85,10 +85,11 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "quicksigorta",
+            CompanySearchText = "quicksigorta|6321429359|0632142935900001",
             CompanyName = "QUICK",
             TlTotalPriceRegexPattern =
-                @"(?i)(?:Brüt\s*Prim)\s*[:]?\s*(-?\d[\d.,]*)|(?m)^\s*(-?\d[\d.,]*)\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$"
+                @"(?i)(?:Brüt\s*Prim|Sertifika Süresi\n)\s*[:]?\s*(-?\d[\d.,]*)|(?m)^\s*(-?\d[\d.,]*)\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$"
+            //Sertifika Süresi patterni; pdf düz metine dönüştürüldüğünde en kolay bu şekilde prim tutaru bulunmakta
         },
         new Company
         {
@@ -139,7 +140,7 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "dogasigorta.com",
+            CompanySearchText = "dogasigorta.com|SİGORTALI / SİGORTA ETTİREN\nDOGA SİGORTA AŞ",
             CompanyName = "DOĞA",
             TlTotalPriceRegexPattern = @"(?i)(?:brüt\s*prim)\s*[:]?\s*(-?\d[\d.,]*)"
         },
