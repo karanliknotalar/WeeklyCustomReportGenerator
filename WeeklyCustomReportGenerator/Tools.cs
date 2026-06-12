@@ -66,7 +66,7 @@ public static class Tools
     public static List<string> GenerateYearlyWeeklyRegexPatterns()
     {
         const string staticPrefix =
-            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
+            @"(?i)^(?!.*\b(?:makbuz|eng|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
 
         var today = DateTime.Now.Date;
         var weeklyRegexList = new List<string>();
@@ -114,7 +114,7 @@ public static class Tools
     public static List<string> GenerateYearlyWeeklyRegexPatternsShort()
     {
         const string staticPrefix =
-            @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
+            @"(?i)^(?!.*\b(?:makbuz|eng|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
 
         var today = DateTime.Now.Date;
         var year = today.Year - 2;
@@ -133,7 +133,7 @@ public static class Tools
         for (var j = 0; j < 3; j++)
         {
             weeklyRegexList.Add(
-                @"(?i)^(?!.*\b(?:makbuz|acs|eng|hayat|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
+                @"(?i)^(?!.*\b(?:makbuz|eng|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
                 + $"{year}).*");
             year++;
         }
