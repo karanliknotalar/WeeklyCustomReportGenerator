@@ -278,11 +278,11 @@ namespace WeeklyCustomReportGenerator
 
             var realStr = listRegexPattern.Items[e.Index].ToString();
             var shortedStr = realStr.Length > 97
-                ? realStr.Substring(89, realStr.Length - 97)
+                ? realStr.Substring(90, realStr.Length - 97)
                 : realStr;
 
             var startDate = shortedStr.Substring(1, 10);
-            var endDate = shortedStr.Substring(shortedStr.Length - 11, 10);
+            var endDate = shortedStr.Substring(shortedStr.Length - 12, 10);
 
             var finalStr = $"{startDate} ile {endDate} tarihi arasındakiler";
 
