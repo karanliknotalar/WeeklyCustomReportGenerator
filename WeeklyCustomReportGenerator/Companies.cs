@@ -34,7 +34,7 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "0069003970664932|9589169656164926",
+            CompanySearchText = "0069003970664932|9589169656164926|ANKARA ANONİM TÜRK SİGORTA ŞİRKETİ'",
             CompanyName = "ANKARA",
             TlTotalPriceRegexPattern = @"(?i)(?:ÖDENECEK\s+TUTAR|İADE\s+TUTAR|ÖDENECEK)\s*[:]?\s*(-?\d[\d.,]*)"
         },
