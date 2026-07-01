@@ -220,26 +220,44 @@ public class WeeklyReportBuilder()
         var sortedList = list.OrderBy(x => x.Date).ThenBy(x => x.FullLine).ToList();
         var renewListCount = list.Count(x => x.IsRenewal);
         var galleryListCount = list.Count(x => x.IsGalleryCustomer);
+        
+        var newCount = sortedList.Count - renewListCount;
+        var newNormalCount = newCount - galleryListCount;
 
-        var renewTxt = renewListCount != 0 ? $"|{renewListCount:D2} Yenileme" : "";
-        var newTxt = (sortedList.Count - renewListCount) != 0 ? $"|{sortedList.Count - renewListCount:D2} Yeni" : "";
-        var galleryTxt = galleryListCount != 0 ? $"{galleryListCount:D2} Tanesi Galeri" : "";
+        var newDetails = galleryListCount != 0
+            ? string.Join(", ", new[]
+            {
+                newNormalCount != 0 ? $"{newNormalCount:D2} N.Müşteri" : null,
+                $"{galleryListCount:D2} Galeri"
+            }.Where(x => x != null))
+            : "";
 
+        var renewTxt = renewListCount != 0 ? $" | {renewListCount:D2} Yenileme" : "";
+        var newTxt = newCount != 0 ? $" | {newCount:D2} Yeni{(newDetails != "" ? $" ({newDetails})" : "")}" : "";
+        var galleryTxt = galleryListCount != 0 ? $" {galleryListCount:D2} Galeri" : "";
 
         sb.AppendLine(printStatus
-            ? $"\t{categoryName} ({sortedList.Count:D2}) {newTxt} {galleryTxt}{renewTxt}|"
+            ? $"\t{categoryName} ({sortedList.Count:D2}){newTxt}{renewTxt} |"
             : $"\t{categoryName} ({sortedList.Count:D2}) |{galleryTxt}");
 
-
-        foreach (var item in sortedList)
+        
+        var lines = sortedList.Select(item =>
         {
             var isRenew = item.IsRenewal ? "+" : "-";
             var renewStatus = printStatus ? $"{isRenew}|" : "";
             var gTxt = item.IsGalleryCustomer ? "(G) " : "";
+            var prefix = $"{renewStatus} {item.FullLine} {gTxt}".TrimEnd().Normalize(NormalizationForm.FormC);
             var companyInfo = !string.IsNullOrEmpty(item.Company)
-                ? $"\u27a4{item.TotalPrice} \u275a{item.Company}"
+                ? $"【{item.TotalPrice}】{item.Company}"
                 : "";
-            sb.AppendLine($"\t\t{renewStatus} {item.FullLine} {gTxt}{companyInfo}");
+            return (prefix, companyInfo);
+        }).ToList();
+
+        var maxLen = lines.Count != 0 ? lines.Max(l => l.prefix.Length) : 0;
+
+        foreach (var (prefix, companyInfo) in lines)
+        {
+            sb.AppendLine($"\t\t{prefix.PadRight(maxLen)} {companyInfo}");
         }
 
         sb.AppendLine();
