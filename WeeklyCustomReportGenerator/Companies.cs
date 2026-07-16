@@ -89,7 +89,7 @@ public partial class TextPdfReader
         new Company
         {
             CompanySearchText =
-                "neova.com.tr|NEOVA SİGORTA AŞ KİŞİSEL VERİLERİN İŞLENMESİ|NEOVA SİGORTA ANONİM ŞİRKETİ, işbu|NEOVA KATILIM SİGORTA A.Ş.\nKATILIMCI|NEOVA KATILIM SİGORTA A.Ş.\nAdres Finanskent|NEOVA KATILIM SİGORTA ANONİM ŞİRKETİ, işbu",
+                "neova.com.tr|NEOVA SİGORTA AŞ KİŞİSEL VERİLERİN İŞLENMESİ|NEOVA SİGORTA ANONİM ŞİRKETİ, işbu|NEOVA KATILIM SİGORTA A.Ş.\nKATILIMCI|NEOVA KATILIM SİGORTA A.Ş.\nAdres Finanskent|NEOVA KATILIM SİGORTA ANONİM ŞİRKETİ, işbu|NEOVA KATILIM SİGORTA A.Ş.\nKozyatağı",
             CompanyName = "NEOVA",
             TlTotalPriceRegexPattern = @"(?i)(?:BRÜT\s*KATKI\s*PRİMİ)\s*[:]?\s*(-?\d[\d.,]*)"
         },
