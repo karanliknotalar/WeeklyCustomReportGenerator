@@ -30,7 +30,8 @@ public partial class TextPdfReader
         {
             CompanySearchText = "axasigorta",
             CompanyName = "AXA",
-            TlTotalPriceRegexPattern = @"(?i)(?:Ödenecek\s+Prim)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$"
+            TlTotalPriceRegexPattern =
+                @"(?i)(?:Ödenecek\s+Prim)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$"
         },
         new Company
         {
@@ -52,21 +53,23 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "0470003295900010|www.hdisigorta.com.tr|SİGORTA ŞİRKETİ ÜNVANI : HDI SİGORTA A.Ş.|ŞİRKET BİLGİLERİ\nSigorta Şirketi Ünvanı : HDI SİGORTA A.Ş.\nAdres|H D I S İ G O R T A A . Ş .",
+            CompanySearchText =
+                "0470003295900010|www.hdisigorta.com.tr|SİGORTA ŞİRKETİ ÜNVANI : HDI SİGORTA A.Ş.|ŞİRKET BİLGİLERİ\nSigorta Şirketi Ünvanı : HDI SİGORTA A.Ş.\nAdres|H D I S İ G O R T A A . Ş .|HDI SİGORTA A.Ş.\nAdres : Sahrayı Cedit",
             CompanyName = "HDI",
             TlTotalPriceRegexPattern =
                 @"(?i)(?:Brüt Prim \(TL\)|Brüt Prim|Toplam Prim|Ödenecek Poliçe(?: Primi)?|TOPLAM\s*:|Ödenecek Tutar|Toplam Ödenecek Prim|Prim Toplam Prim :\n|Brüt\s+Prim\s*\(TL\))(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$",
-            EurTotalPriceRegexPattern = @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR|EURO[\s\S]*?€\s*(-?\d[\d.,]*)\s*\r?\n\s*Ödenecek Prim\s*:?",
+            EurTotalPriceRegexPattern =
+                @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR|EURO[\s\S]*?€\s*(-?\d[\d.,]*)\s*\r?\n\s*Ödenecek Prim\s*:?",
             EuroConversion = EuroConversionMode.FallbackToEurWhenPathContains,
             EuroConversionPathKeywords = ["Yeşilsigorta", "YSS"],
             // DefinitelyEuroConversionPathKeywords = ["FFL"]
-            
         },
         new Company
         {
             CompanySearchText = "hepiyi.com.tr|Hepiyi Çözüm Merkezi|SİGORTALI / SİGORTA ETTİREN HEPİYİ SİGORTA A.Ş.",
             CompanyName = "HEPIYI",
-            TlTotalPriceRegexPattern = @"(?i)(?:brüt\s*prim|iade\s*edilecek\s*prim|POLİÇE PRİMİ)\s*[:]?\s*(-?\d[\d.,]*)",
+            TlTotalPriceRegexPattern =
+                @"(?i)(?:brüt\s*prim|iade\s*edilecek\s*prim|POLİÇE PRİMİ)\s*[:]?\s*(-?\d[\d.,]*)",
             EuroConversion = EuroConversionMode.WhenPathContains,
             EuroConversionPathKeywords = ["YSS"]
         },
@@ -85,7 +88,8 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "neova.com.tr|NEOVA SİGORTA AŞ KİŞİSEL VERİLERİN İŞLENMESİ|NEOVA SİGORTA ANONİM ŞİRKETİ, işbu|NEOVA KATILIM SİGORTA A.Ş.\nKATILIMCI",
+            CompanySearchText =
+                "neova.com.tr|NEOVA SİGORTA AŞ KİŞİSEL VERİLERİN İŞLENMESİ|NEOVA SİGORTA ANONİM ŞİRKETİ, işbu|NEOVA KATILIM SİGORTA A.Ş.\nKATILIMCI",
             CompanyName = "NEOVA",
             TlTotalPriceRegexPattern = @"(?i)(?:BRÜT\s*KATKI\s*PRİMİ)\s*[:]?\s*(-?\d[\d.,]*)"
         },
@@ -152,7 +156,8 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "dogasigorta.com|SİGORTALI / SİGORTA ETTİREN\nDOGA SİGORTA AŞ|SİGORTALI / SİGORTA ETTİREN DOGA SİGORTA AŞ",
+            CompanySearchText =
+                "dogasigorta.com|SİGORTALI / SİGORTA ETTİREN\nDOGA SİGORTA AŞ|SİGORTALI / SİGORTA ETTİREN DOGA SİGORTA AŞ",
             CompanyName = "DOĞA",
             TlTotalPriceRegexPattern = @"(?i)(?:brüt\s*prim)\s*[:]?\s*(-?\d[\d.,]*)"
         },
@@ -164,7 +169,8 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "turknippon.com|TÜRK NİPPON SİGORTA KASKO ZEYİLNAMESİ|KARAYOLLARI TRAFİK KANUNU\nZORUNLU MALİ SORUMLULUK TRAFİK SİGORTA ZEYİLNAMESİ\nSATIŞ NEDENİYLE İPTAL\nÜrün Kodu : ",
+            CompanySearchText =
+                "turknippon.com|TÜRK NİPPON SİGORTA KASKO ZEYİLNAMESİ|KARAYOLLARI TRAFİK KANUNU\nZORUNLU MALİ SORUMLULUK TRAFİK SİGORTA ZEYİLNAMESİ\nSATIŞ NEDENİYLE İPTAL\nÜrün Kodu : ",
             CompanyName = "TÜRKNİPPON",
             TlTotalPriceRegexPattern = @"(?i)(?:TOPLAM\s*PRİM)\s*[:]?\s*(-?\d[\d.,]*)"
         },
@@ -211,7 +217,8 @@ public partial class TextPdfReader
         {
             CompanySearchText = "Point Asistans|5560532445|POİNT ASİSTANS",
             CompanyName = "POINT",
-            TlTotalPriceRegexPattern = @"(?i)(?:YOL YARDIM PAKET[İI]|YOL YARDIM|ECO POİNT).*?(\d{1,3}(?:,\d{3})*\.\d{2})(?!.*\d)"
+            TlTotalPriceRegexPattern =
+                @"(?i)(?:YOL YARDIM PAKET[İI]|YOL YARDIM|ECO POİNT).*?(\d{1,3}(?:,\d{3})*\.\d{2})(?!.*\d)"
         },
         new Company
         {
