@@ -19,6 +19,7 @@ namespace WeeklyCustomReportGenerator
         }
 
         public static string DriveDirectory = string.Empty;
+        public static string IgnoreList = string.Empty;
         private string _saveDirectory = string.Empty;
         private string _year = DateTime.Now.Year.ToString();
         private string _month = string.Empty;
@@ -29,13 +30,17 @@ namespace WeeklyCustomReportGenerator
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            DriveDirectory = txtDriveDir.Text;
+            _saveDirectory = txtSaveDir.Text;
+            IgnoreList = txtIgnoreList.Text;
             _managedControls =
-                [listRegexPattern, cBoxYear, cBoxMonth, btnSave, txtInput, txtProducts, txtGalleryCustomerList];
+            [
+                listRegexPattern, cBoxYear, cBoxMonth, btnSave, txtInput, txtProducts, txtGalleryCustomerList,
+                txtIgnoreList
+            ];
             _tempName = this.Text;
             listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
                 .ToArray<object>());
-            DriveDirectory = txtDriveDir.Text;
-            _saveDirectory = txtSaveDir.Text;
             CustomerGalleryList = txtGalleryCustomerList.Lines.ToList();
             var logFilePath = Path.Combine("C:\\", "pdf_processing_log.txt");
             var logPdfUndefinedFilePath = Path.Combine("C:\\", "pdf_undefined_log.txt");
@@ -44,7 +49,7 @@ namespace WeeklyCustomReportGenerator
             if (File.Exists(logPdfUndefinedFilePath))
                 File.Delete(logPdfUndefinedFilePath);
 
-            cBoxYear.Items.AddRange(Enumerable.Range(DateTime.Now.Year - 2, 3).Select(y => y.ToString())
+            cBoxYear.Items.AddRange(Enumerable.Range(DateTime.Now.Year - 4, 5).Select(y => y.ToString())
                 .ToArray<object>());
 
             ProgressReporter.OnProgressChanged = (value) =>
@@ -247,7 +252,7 @@ namespace WeeklyCustomReportGenerator
             _month = selectedMonth == "all" ? string.Empty : selectedMonth;
 
             var pattern =
-                @$"(?i)^(?!.*\b(?:makbuz|eng|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{{2}}\.{month}.{year}).*\.pdf$";
+                @$"(?i)^(?!.*\b(?:{txtIgnoreList.Text})\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{{2}}\.{month}.{year}).*\.pdf$";
 
             GetDirList(pattern);
         }
@@ -277,12 +282,11 @@ namespace WeeklyCustomReportGenerator
             e.DrawBackground();
 
             var realStr = listRegexPattern.Items[e.Index].ToString();
-            var shortedStr = realStr.Length > 97
-                ? realStr.Substring(90, realStr.Length - 97)
-                : realStr;
+            const string pattern = @"\((\d{2}\.\d{2}\.\d{4})\|(?:.*\|)?(\d{2}\.\d{2}\.\d{4})\)";
 
-            var startDate = shortedStr.Substring(1, 10);
-            var endDate = shortedStr.Substring(shortedStr.Length - 12, 10);
+            var match = Regex.Match(realStr, pattern);
+            var startDate = match.Groups[1].Value;
+            var endDate = match.Groups[2].Value;
 
             var finalStr = $"{startDate} ile {endDate} tarihi arasındakiler";
 
@@ -304,6 +308,15 @@ namespace WeeklyCustomReportGenerator
             {
                 e.DrawFocusRectangle();
             }
+        }
+
+
+        private void txtIgnoreList_Leave(object sender, EventArgs e)
+        {
+            listRegexPattern.Items.Clear();
+            IgnoreList = txtIgnoreList.Text;
+            listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
+                .ToArray<object>());
         }
     }
 }

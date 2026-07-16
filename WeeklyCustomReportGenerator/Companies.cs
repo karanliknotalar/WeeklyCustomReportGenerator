@@ -40,17 +40,23 @@ public partial class TextPdfReader
         },
         new Company
         {
+            CompanySearchText = "BEREKET SİGORTA A.Ş.\nKISIKLI",
+            CompanyName = "BEREKET",
+            TlTotalPriceRegexPattern = @"(?i)(?:BRÜT PRİM )\s*[:]?\s*(-?\d[\d.,]*)"
+        },
+        new Company
+        {
             CompanySearchText = "Corpus Yardım",
             CompanyName = "CORPUS",
             TlTotalPriceRegexPattern = @"(?i)(?:BRÜT\s+PRİM)\s*[:]?\s*(-?\d[\d.,]*)"
         },
         new Company
         {
-            CompanySearchText = "0470003295900010|www.hdisigorta.com.tr|SİGORTA ŞİRKETİ ÜNVANI : HDI SİGORTA A.Ş.",
+            CompanySearchText = "0470003295900010|www.hdisigorta.com.tr|SİGORTA ŞİRKETİ ÜNVANI : HDI SİGORTA A.Ş.|ŞİRKET BİLGİLERİ\nSigorta Şirketi Ünvanı : HDI SİGORTA A.Ş.\nAdres",
             CompanyName = "HDI",
             TlTotalPriceRegexPattern =
                 @"(?i)(?:Brüt Prim \(TL\)|Brüt Prim|Toplam Prim|Ödenecek Poliçe(?: Primi)?|TOPLAM\s*:|Ödenecek Tutar|Toplam Ödenecek Prim|Prim Toplam Prim :\n|Brüt\s+Prim\s*\(TL\))(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$",
-            EurTotalPriceRegexPattern = @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR",
+            EurTotalPriceRegexPattern = @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR|EURO[\s\S]*?€\s*([\d.,]+)\s*\r?\n\s*Ödenecek Prim\s*:?",
             EuroConversion = EuroConversionMode.FallbackToEurWhenPathContains,
             EuroConversionPathKeywords = ["Yeşilsigorta", "YSS"],
             // DefinitelyEuroConversionPathKeywords = ["FFL"]
@@ -60,7 +66,7 @@ public partial class TextPdfReader
         {
             CompanySearchText = "hepiyi.com.tr|Hepiyi Çözüm Merkezi|SİGORTALI / SİGORTA ETTİREN HEPİYİ SİGORTA A.Ş.",
             CompanyName = "HEPIYI",
-            TlTotalPriceRegexPattern = @"(?i)(?:brüt\s*prim|iade\s*edilecek\s*prim)\s*[:]?\s*(-?\d[\d.,]*)",
+            TlTotalPriceRegexPattern = @"(?i)(?:brüt\s*prim|iade\s*edilecek\s*prim|POLİÇE PRİMİ)\s*[:]?\s*(-?\d[\d.,]*)",
             EuroConversion = EuroConversionMode.WhenPathContains,
             EuroConversionPathKeywords = ["YSS"]
         },
@@ -79,7 +85,7 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "NEOVA KATILIM SİGORTA A.Ş.",
+            CompanySearchText = "neova.com.tr|NEOVA SİGORTA AŞ KİŞİSEL VERİLERİN İŞLENMESİ|NEOVA SİGORTA ANONİM ŞİRKETİ, işbu|NEOVA KATILIM SİGORTA A.Ş.\nKATILIMCI",
             CompanyName = "NEOVA",
             TlTotalPriceRegexPattern = @"(?i)(?:BRÜT\s*KATKI\s*PRİMİ)\s*[:]?\s*(-?\d[\d.,]*)"
         },
@@ -116,7 +122,7 @@ public partial class TextPdfReader
             CompanySearchText = "turkiyesigorta|Sigortalı / Sigorta Ettiren TÜRKİYE SİGORTA AŞ",
             CompanyName = "TÜRKİYE",
             TlTotalPriceRegexPattern =
-                @"(?i)(?:toplam\s*brüt\s*prim|kuruş\s*toplam)\s*[:]?\s*(-?\d[\d.,]*)"
+                @"(?i)(?:toplam\s*brüt\s*prim|kuruş\s*toplam|Toplam)\s*[:]?\s*(-?\d[\d.,]*)"
         },
         new Company
         {
@@ -132,6 +138,12 @@ public partial class TextPdfReader
         },
         new Company
         {
+            CompanySearchText = "dubaisigorta.com.tr",
+            CompanyName = "DUBAI",
+            TlTotalPriceRegexPattern = @"(?i)(?:BRÜT PRİM )\s*[:]?\s*(-?\d[\d.,]*)"
+        },
+        new Company
+        {
             CompanySearchText =
                 "Zurich öncelikli servis ağı hakkında|ZURICH SiGORTA A.Ş.\nACENTESİ",
             CompanyName = "ZURICH",
@@ -140,7 +152,7 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "dogasigorta.com|SİGORTALI / SİGORTA ETTİREN\nDOGA SİGORTA AŞ",
+            CompanySearchText = "dogasigorta.com|SİGORTALI / SİGORTA ETTİREN\nDOGA SİGORTA AŞ|SİGORTALI / SİGORTA ETTİREN DOGA SİGORTA AŞ",
             CompanyName = "DOĞA",
             TlTotalPriceRegexPattern = @"(?i)(?:brüt\s*prim)\s*[:]?\s*(-?\d[\d.,]*)"
         },
@@ -152,7 +164,7 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "turknippon.com|TÜRK NİPPON SİGORTA KASKO ZEYİLNAMESİ",
+            CompanySearchText = "turknippon.com|TÜRK NİPPON SİGORTA KASKO ZEYİLNAMESİ|KARAYOLLARI TRAFİK KANUNU\nZORUNLU MALİ SORUMLULUK TRAFİK SİGORTA ZEYİLNAMESİ\nSATIŞ NEDENİYLE İPTAL\nÜrün Kodu : ",
             CompanyName = "TÜRKNİPPON",
             TlTotalPriceRegexPattern = @"(?i)(?:TOPLAM\s*PRİM)\s*[:]?\s*(-?\d[\d.,]*)"
         },
@@ -161,7 +173,7 @@ public partial class TextPdfReader
             CompanySearchText =
                 "sekersigorta.com|Sigorta Şirketi Ünvanı : ŞEKER SİGORTA A.Ş.|Sigorta Şirketi Ünvanı ŞEKER SİGORTA A.Ş.",
             CompanyName = "SBN",
-            TlTotalPriceRegexPattern = @"(?i)(?:Brüt|Toplam\s*Brüt\sPrim)\s*[:]?\s*(-?\d[\d.,]*)"
+            TlTotalPriceRegexPattern = @"(?i)(?:Brüt|Toplam\s*Brüt\sPrim|Brüt Prim)\s*[:]?\s*(-?\d[\d.,]*)"
         },
         new Company
         {
@@ -185,7 +197,7 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "0144003789300010",
+            CompanySearchText = "0144003789300010|groupama.com.tr",
             CompanyName = "GROUPAMA",
             TlTotalPriceRegexPattern = @"(?i)(?:BRÜT\sPRİM)\s*[:]?\s*(-?\d[\d.,]*)"
         },

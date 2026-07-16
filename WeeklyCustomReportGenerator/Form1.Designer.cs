@@ -44,6 +44,7 @@
             this.cBoxYear = new System.Windows.Forms.ComboBox();
             this.cBoxMonth = new System.Windows.Forms.ComboBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.txtIgnoreList = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,6 +68,7 @@
             this.tableLayoutPanel1.Controls.Add(this.cBoxYear, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.cBoxMonth, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.progressBar1, 3, 7);
+            this.tableLayoutPanel1.Controls.Add(this.txtIgnoreList, 0, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -150,8 +152,7 @@
             this.listRegexPattern.HorizontalScrollbar = true;
             this.listRegexPattern.Location = new System.Drawing.Point(8, 291);
             this.listRegexPattern.Name = "listRegexPattern";
-            this.tableLayoutPanel1.SetRowSpan(this.listRegexPattern, 2);
-            this.listRegexPattern.Size = new System.Drawing.Size(416, 304);
+            this.listRegexPattern.Size = new System.Drawing.Size(416, 284);
             this.listRegexPattern.TabIndex = 15;
             this.listRegexPattern.Click += new System.EventHandler(this.listRegexPattern_Click);
             this.listRegexPattern.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.listRegexPattern_DrawItem);
@@ -166,7 +167,7 @@
             this.tableLayoutPanel1.SetRowSpan(this.txtProducts, 2);
             this.txtProducts.Size = new System.Drawing.Size(67, 277);
             this.txtProducts.TabIndex = 10;
-            this.txtProducts.Text = "Trafik\r\nKasko\r\nYeşilsigorta\r\nZ.Koltuk\r\nYol Yardım\r\nIMM\r\nTSS\r\nYSS\r\nÖSS\r\nDASK\r\nKONU" + "T\r\nİŞYERİ\r\nTMTAS\r\nK. Ferdi Kaza\r\nFerdi Kaza\r\nFFL\r\nCMR\r\nTKU\r\nMSS\r\nACS\r\nHayat";
+            this.txtProducts.Text = "Trafik\r\nKasko\r\nYeşilsigorta\r\nZ.Koltuk\r\nYol Yardım\r\nIMM\r\nTSS\r\nYSS\r\nÖSS\r\nDASK\r\nKONU" + "T\r\nİŞYERİ\r\nTMTAS\r\nK. Ferdi Kaza\r\nFerdi Kaza\r\nFFL\r\nCMR\r\nTKU\r\nMSS\r\nACS\r\nHayat\r\nCep" + " Kasko\r\nYabancı Sağlık\r\nEmtia Nakliyat";
             // 
             // lblSaveDir
             // 
@@ -236,6 +237,17 @@
             this.progressBar1.Size = new System.Drawing.Size(589, 35);
             this.progressBar1.TabIndex = 22;
             // 
+            // txtIgnoreList
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.txtIgnoreList, 2);
+            this.txtIgnoreList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtIgnoreList.Location = new System.Drawing.Point(8, 581);
+            this.txtIgnoreList.Name = "txtIgnoreList";
+            this.txtIgnoreList.Size = new System.Drawing.Size(416, 20);
+            this.txtIgnoreList.TabIndex = 23;
+            this.txtIgnoreList.Text = "makbuz|eng|yeşil";
+            this.txtIgnoreList.Leave += new System.EventHandler(this.txtIgnoreList_Leave);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -249,6 +261,8 @@
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.TextBox txtIgnoreList;
 
         private System.Windows.Forms.ProgressBar progressBar1;
 

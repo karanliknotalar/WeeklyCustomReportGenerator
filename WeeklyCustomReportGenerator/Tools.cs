@@ -65,8 +65,7 @@ public static class Tools
 
     public static List<string> GenerateYearlyWeeklyRegexPatterns()
     {
-        const string staticPrefix =
-            @"(?i)^(?!.*\b(?:makbuz|eng|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
+        var staticPrefix = $@"(?i)^(?!.*\b(?:{Form1.IgnoreList})\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
 
         var today = DateTime.Now.Date;
         var weeklyRegexList = new List<string>();
@@ -113,8 +112,7 @@ public static class Tools
 
     public static List<string> GenerateYearlyWeeklyRegexPatternsShort()
     {
-        const string staticPrefix =
-            @"(?i)^(?!.*\b(?:makbuz|eng|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
+        var staticPrefix = $@"(?i)^(?!.*\b(?:{Form1.IgnoreList})\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*";
 
         var today = DateTime.Now.Date;
         var year = today.Year - 2;
@@ -133,7 +131,7 @@ public static class Tools
         for (var j = 0; j < 3; j++)
         {
             weeklyRegexList.Add(
-                @"(?i)^(?!.*\b(?:makbuz|eng|yeşil)\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
+                $@"(?i)^(?!.*\b(?:{Form1.IgnoreList})\b)(?:(?!.*\bzeyil|zeyili\b)|(?=.*\bİptal\b)).*(\d{2}\.\d{2}\."
                 + $"{year}).*");
             year++;
         }
@@ -381,6 +379,7 @@ public static class Tools
     public static void GenerateCategoryAnalysis(List<PolicyItem> items, StringBuilder sb, bool isCancel = false)
     {
         var isActiveText = isCancel ? "İPTAL" : "ÜRETİM";
+        var grandTotal = items.Sum(p => ParseTotalPrice(p.TotalPrice));
         var analysisData = items
             .GroupBy(p => p.Category)
             .Select(g =>
@@ -413,6 +412,7 @@ public static class Tools
         const int colWidthTotalGallery = 10;
         const int colWidthTotalPrice = 15;
         const int colWidthAvgPrice = 15;
+        const int colWidthGrandTotal = 58;
 
         sb.Append("Poliçe".PadRight(colWidthCategory));
         sb.Append("Toplam".PadLeft(colWidthTotalCount));
@@ -436,9 +436,9 @@ public static class Tools
             sb.Append(item.TotalGallery.ToString().PadLeft(colWidthTotalGallery));
             sb.Append(formattedTotalPrice.PadLeft(colWidthTotalPrice));
             sb.Append(formattedAveragePrice.PadLeft(colWidthAvgPrice));
-
             sb.AppendLine();
         }
+        sb.Append("GENEL TOPLAM" + grandTotal.ToString("N0", TrCulture).PadLeft(58,'-'));
     }
 
     public static List<ExelItem> GenerateCategoryCompanyDetails(List<PolicyItem> items)
