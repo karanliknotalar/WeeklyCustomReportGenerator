@@ -104,7 +104,6 @@ public partial class TextPdfReader
         return pdfReadResult;
     }
 
-
     private static string ReadPdf_IText7_Advanced(string filePath)
     {
         try
