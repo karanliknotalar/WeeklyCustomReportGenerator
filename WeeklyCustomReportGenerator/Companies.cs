@@ -52,11 +52,11 @@ public partial class TextPdfReader
         },
         new Company
         {
-            CompanySearchText = "0470003295900010|www.hdisigorta.com.tr|SİGORTA ŞİRKETİ ÜNVANI : HDI SİGORTA A.Ş.|ŞİRKET BİLGİLERİ\nSigorta Şirketi Ünvanı : HDI SİGORTA A.Ş.\nAdres",
+            CompanySearchText = "0470003295900010|www.hdisigorta.com.tr|SİGORTA ŞİRKETİ ÜNVANI : HDI SİGORTA A.Ş.|ŞİRKET BİLGİLERİ\nSigorta Şirketi Ünvanı : HDI SİGORTA A.Ş.\nAdres|H D I S İ G O R T A A . Ş .",
             CompanyName = "HDI",
             TlTotalPriceRegexPattern =
                 @"(?i)(?:Brüt Prim \(TL\)|Brüt Prim|Toplam Prim|Ödenecek Poliçe(?: Primi)?|TOPLAM\s*:|Ödenecek Tutar|Toplam Ödenecek Prim|Prim Toplam Prim :\n|Brüt\s+Prim\s*\(TL\))(?!.*EUR)\s*[:]?\s*(-?\d[\d.,]*)|(?m)(-?\d[\d.,]*)\s*TL\s*\r?\n\s*BRÜT\s+PRİM\s*:?\s*$",
-            EurTotalPriceRegexPattern = @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR|EURO[\s\S]*?€\s*([\d.,]+)\s*\r?\n\s*Ödenecek Prim\s*:?",
+            EurTotalPriceRegexPattern = @"(?i)(?:Toplam Ödenecek Prim)\s*[:]?\s*(-?\d[\d.,]*) EUR|EURO[\s\S]*?€\s*(-?\d[\d.,]*)\s*\r?\n\s*Ödenecek Prim\s*:?",
             EuroConversion = EuroConversionMode.FallbackToEurWhenPathContains,
             EuroConversionPathKeywords = ["Yeşilsigorta", "YSS"],
             // DefinitelyEuroConversionPathKeywords = ["FFL"]
@@ -128,7 +128,7 @@ public partial class TextPdfReader
         {
             CompanySearchText = "dask.gov.tr",
             CompanyName = "DASK",
-            TlTotalPriceRegexPattern = @"(?i)(?:Poliçe\s+Primi|SİGORTA PRİMİ : ₺)\s*[:]?\s*(-?\d[\d.,]*)",
+            TlTotalPriceRegexPattern = @"(?i)(?:Poliçe\s+Primi|SİGORTA PRİMİ : ₺|PRİM : )\s*[:]?\s*(-?\d[\d.,]*)",
         },
         new Company
         {

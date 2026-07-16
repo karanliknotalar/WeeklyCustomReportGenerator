@@ -116,10 +116,9 @@ public partial class TextPdfReader
                 for (var i = 1; i <= Math.Min(pdf.GetNumberOfPages(), 15); i++)
                 {
                     var strategy = new LocationTextExtractionStrategy();
-
-                    var text = PdfTextExtractor.GetTextFromPage(pdf.GetPage(i), strategy);
-
-                    sb.AppendLine(text);
+                    var processor = new SafePdfCanvasProcessor(strategy);
+                    processor.ProcessPageContent(pdf.GetPage(i));
+                    sb.AppendLine(strategy.GetResultantText());
                 }
             }
 
