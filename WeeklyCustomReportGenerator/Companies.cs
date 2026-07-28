@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace WeeklyCustomReportGenerator;
 
 public partial class TextPdfReader
 {
+    public TextPdfReader()
+    {
+        SortCompaniesByName();
+    }
+
     private readonly List<Company> _companies =
     [
         new Company
@@ -233,4 +239,9 @@ public partial class TextPdfReader
             TlTotalPriceRegexPattern = @"(?i)(?:Toplam Tutar)\s*[:]?\s*(-?\d[\d.,]*)"
         }
     ];
+
+    private void SortCompaniesByName()
+    {
+        _companies.Sort((a, b) => string.Compare(a.CompanyName, b.CompanyName, StringComparison.OrdinalIgnoreCase));
+    }
 }
