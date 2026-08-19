@@ -237,6 +237,12 @@ public partial class TextPdfReader
             CompanySearchText = "TEZ ASİSTANS|tezyolyardım",
             CompanyName = "TEZ",
             TlTotalPriceRegexPattern = @"(?i)(?:Toplam Tutar)\s*[:]?\s*(-?\d[\d.,]*)"
+        },
+        new Company
+        {
+            CompanySearchText = "0333216684800001|emaasigorta.com.tr",
+            CompanyName = "EMAA",
+            TlTotalPriceRegexPattern = @"(?i)(?:BRÜT PRİM)\s*[:]?\s*(-?\d[\d.,]*)"
         }
     ];
 
