@@ -122,7 +122,7 @@ public partial class TextPdfReader
         new Company
         {
             CompanySearchText =
-                "somposigorta.com.tr|SOMPO SİGORTA TRAFİK|Grup Kodu -\nSOMPO SİGORTA A.Ş.|Sigorta Şirketi Ünvanı : SOMPO SİGORTA A.Ş.|SOMPO SİGORTA A.Ş.\nYILDIZ|SOMPO SİGORTA A.Ş.\nİSTANBUL GRUP",
+                "somposigorta.com.tr|SOMPO SİGORTA TRAFİK|Grup Kodu -\nSOMPO SİGORTA A.Ş.|Sigorta Şirketi Ünvanı : SOMPO SİGORTA A.Ş.|SOMPO SİGORTA A.Ş.\nYILDIZ|SOMPO SİGORTA A.Ş.\nİSTANBUL GRUP|SOMPO SİGORTA A.Ş.\nTel",
             CompanyName = "SOMPO",
             TlTotalPriceRegexPattern =
                 @"(?i)(?:brüt\s*prim|toplam\s*brüt(?:\s*prim)?|ödenecek\s*prim)\s*[:]?\s*(-?\d[\d.,]*)"
