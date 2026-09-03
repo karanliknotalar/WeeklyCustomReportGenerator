@@ -90,7 +90,7 @@ public partial class TextPdfReader
             CompanySearchText = "magdeburger.com.tr|0610002277300019",
             CompanyName = "MAGDEBURGER",
             TlTotalPriceRegexPattern =
-                @"(?i)(?:brüt\s*prim|ödenecek\s*toplam\s*prim|iade\s*edilecek\s*prim)\s*[:]?\s*(-?\d[\d.,]*)"
+                @"(?i)(?:brüt\s*prim|ödenecek\s*toplam\s*prim|iade\s*edilecek\s*prim|IADE EDILECEK PRIM)\s*[:]?\s*(-?\d[\d.,]*)"
         },
         new Company
         {
