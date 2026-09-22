@@ -172,6 +172,7 @@
         <Compile Include="CustomerAnalysisExcelWriter.cs" />
         <Compile Include="EuroRateFetcher.cs" />
         <Compile Include="ExelItem.cs" />
+        <Compile Include="ExternalData.cs" />
         <Compile Include="Form1.cs">
             <SubType>Form</SubType>
         </Compile>
@@ -189,6 +190,15 @@
         <Compile Include="WeeklyReportBuilder.cs" />
         <EmbeddedResource Include="Form1.resx">
           <DependentUpon>Form1.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="DefaultData\sirketler.default.json">
+            <LogicalName>WeeklyCustomReportGenerator.DefaultData.sirketler.default.json</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="DefaultData\urunler.default.txt">
+            <LogicalName>WeeklyCustomReportGenerator.DefaultData.urunler.default.txt</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="DefaultData\galeri_musterileri.default.txt">
+            <LogicalName>WeeklyCustomReportGenerator.DefaultData.galeri_musterileri.default.txt</LogicalName>
         </EmbeddedResource>
         <EmbeddedResource Include="Properties\Resources.resx">
             <Generator>ResXFileCodeGenerator</Generator>

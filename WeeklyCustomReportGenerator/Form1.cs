@@ -39,6 +39,14 @@ namespace WeeklyCustomReportGenerator
                 txtIgnoreList
             ];
             _tempName = this.Text;
+
+            // Ürün listesi ve galeri müşteri listesi artık ExternalData.DataDirectory
+            // altındaki dosyalardan okunuyor (dosyalar yoksa gömülü varsayılanlar
+            // otomatik olarak oraya çıkarılıp kullanılıyor). Bkz. ExternalData.cs
+            ExternalData.EnsureFilesExist();
+            txtProducts.Lines = ExternalData.LoadProducts().ToArray();
+            txtGalleryCustomerList.Lines = ExternalData.LoadGalleryCustomers().ToArray();
+
             listRegexPattern.Items.AddRange(Tools.GenerateYearlyWeeklyRegexPatterns().AsEnumerable().Reverse()
                 .ToArray<object>());
             CustomerGalleryList = txtGalleryCustomerList.Lines.ToList();
